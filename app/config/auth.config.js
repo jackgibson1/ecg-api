@@ -1,3 +1,1 @@
-module.exports = { 
-    secret: "ecg-secret-key"
-};
+export const secret = "ecg-secret-key";
