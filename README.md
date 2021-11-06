@@ -1,2 +1,2 @@
-- Currently empty folder. 
-- In future will hold Springboot API.
+- Node.js & Express API.
+- Currently implementing authentication using Java Web Token. 
