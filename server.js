@@ -46,6 +46,7 @@ function initial() {
         name: "user"
     }); 
 
+    // field engineer
     Role.create({ 
         id: 2, 
         name: "moderator"
