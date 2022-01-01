@@ -1,2 +1,2 @@
-- Node.js & Express API.
-- Currently implementing authentication using Java Web Token. 
+- Node.js & Express authentication API.
+- Authentication implemented using Java Web Token stored in LocalStorage (client-side). 
