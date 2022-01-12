@@ -69,7 +69,7 @@ exports.userUpdateCoursePosition = (req, res) => {
         return res.status(403).send({ 
             message: "courseId not present parameters!"
         });
-    } else if (!updatedPosition) { 
+    } else if (typeof updatedPosition == 'undefined') { 
         return res.status(403).send({ 
             message: "updated position not present in the request body!"
         });
