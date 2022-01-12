@@ -49,7 +49,6 @@ exports.userCoursePosition = (req, res) => {
             courseId: courseId
         }
     }).then(result => { 
-        console.log(result);
         return res.json({ position: result[0].dataValues.position });
     }).catch((err) => { 
         return res.status(500).send({ message: err.message });

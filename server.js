@@ -49,26 +49,36 @@ function initial() {
 
     Role.create({ 
         id: 2, 
-        name: "moderator"
-    }); 
-
-    Role.create({ 
-        id: 3, 
         name: "admin"
     });
 
     Course.create({ 
         id: 1, 
-        name: "anat"
+        name: "Anatomy, Blood Flow & Contraction Of The Heart"
     }); 
 
     Course.create({ 
         id: 2, 
-        name: "intro"
+        name: "ECG Introduction"
     }); 
 
     Course.create({ 
         id: 3, 
-        name: "diagrams"
+        name: "Parts Of The ECG Explained"
+    });
+
+    Course.create({ 
+        id: 4, 
+        name: "How To Read An ECG"
+    });
+
+    Course.create({ 
+        id: 5, 
+        name: "How To Document An ECG"
+    });
+
+    Course.create({ 
+        id: 6, 
+        name: "Conditions"
     });
 }

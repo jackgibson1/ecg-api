@@ -48,7 +48,7 @@ db.user_progress = sequelize.define('user_progress', {
 db.user.belongsToMany(db.course, { through: db.user_progress });
 db.course.belongsToMany(db.user, { through: db.user_progress });
 
-db.ROLES = ["user", "admin", "moderator"]; 
+db.ROLES = ["user", "admin"]; 
 
 module.exports = db; 
 

@@ -51,6 +51,7 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+    // Find user in database
     User.findOne({
         where: {
             username: req.body.username
