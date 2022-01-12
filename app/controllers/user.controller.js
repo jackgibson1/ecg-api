@@ -1,23 +1,16 @@
 const db = require("../models");
 const User_Progress = db.user_progress;
+const User = db.user;
 
 exports.allAccess = (req, res) => { 
     res.status(200).send("Public content.");
-};
-
-exports.userBoard = (req, res) => { 
-    res.status(200).send("User content.");
 };
 
 exports.adminBoard = (req, res) => { 
     res.status(200).send("Admin Content.");
 };
 
-exports.moderatorBoard = (req, res) => { 
-    res.status(200).send("Moderator Content.");
-};
-
-exports.userAllCourseProgress = (req, res) => { 
+exports.userAllCoursePositions = (req, res) => { 
     let userId = req.headers["user-id"]; 
     
     if(!userId) { 
@@ -25,7 +18,7 @@ exports.userAllCourseProgress = (req, res) => {
             message: "No userId provided!"
         });
     }
-
+    
     User_Progress.findAll({
         where: { 
             userId: userId
@@ -40,3 +33,61 @@ exports.userAllCourseProgress = (req, res) => {
         return res.status(500).send({ message: err.message });
     });
 };
+
+exports.userCoursePosition = (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    let courseId = req.params.courseId; 
+    
+    if(!userId || !courseId) { 
+        return res.status(403).send({ 
+            message: "userId or courseId not present!"
+        });
+    }
+
+    User_Progress.findAll({
+        where: { 
+            userId: userId, 
+            courseId: courseId
+        }
+    }).then(result => { 
+        console.log(result);
+        return res.json({ position: result[0].dataValues.position });
+    }).catch((err) => { 
+        return res.status(500).send({ message: err.message });
+    });
+}
+
+exports.userUpdateCoursePosition = (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    let courseId = req.params.courseId; 
+
+    let updatedPosition = req.body.updatedPosition;
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "userId not present in the headers!"
+        });
+    } else if (!courseId) { 
+        return res.status(403).send({ 
+            message: "courseId not present parameters!"
+        });
+    } else if (!updatedPosition) { 
+        return res.status(403).send({ 
+            message: "updated position not present in the request body!"
+        });
+    }
+
+    User_Progress.update(
+        { position: updatedPosition },
+        { where: { 
+            userId: userId, 
+            courseId: courseId
+          }
+        }
+    ).then(() => { 
+        return res.json({ updatedPosition: updatedPosition });
+    }).catch((err) => { 
+        return res.status(500).send({ message: err.message });
+    });
+
+}

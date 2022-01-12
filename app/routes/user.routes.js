@@ -10,39 +10,34 @@ module.exports = function(app) {
         next();
     }); 
 
+    // can use this to view all posts
     app.get("/api/test/all", controller.allAccess); 
-    
-    // define normal user function here
-    app.get(
-        "/api/test/user", 
-        [authJwt.verifyToken], 
-        controller.userBoard   
-    ); 
 
     // get all positions for all courses
     app.get(
-        "/api/test/user/position/all", 
+        "/api/position/all", 
         [authJwt.verifyToken], 
-        controller.userAllCourseProgress
+        controller.userAllCoursePositions
     ); 
 
-    // get position for given course
+    // get position for provided courseId
     app.get(
-        "/api/test/user/position/:courseId", 
+        "/api/position/:courseId", 
         [authJwt.verifyToken], 
-        controller.userAllCourseProgress
+        controller.userCoursePosition
     ); 
 
-    app.get( 
-        "/api/test/mod", 
-        [authJwt.verifyToken, authJwt.isModerator], 
-        controller.moderatorBoard
+    // update position for provided courseId
+    app.put(
+        "/api/position/:courseId", 
+        [authJwt.verifyToken], 
+        controller.userUpdateCoursePosition
     ); 
 
+    // 1. admin will be able to get all course positions for all users
     app.get( 
         "/api/test/admin", 
         [authJwt.verifyToken, authJwt.isAdmin], 
         controller.adminBoard
-        // include controller function to get all
     );
 };
