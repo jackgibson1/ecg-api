@@ -4,12 +4,10 @@ const User = db.user;
 const Role = db.role;
 const User_Progress = db.user_progress;
 const Course = db.course;
-
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const { user, course } = require("../models");
 
 exports.signup = (req, res) => {
     // Save User to Database 

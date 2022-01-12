@@ -1,6 +1,5 @@
 const db = require("../models");
 const User_Progress = db.user_progress;
-const User = db.user;
 
 exports.allAccess = (req, res) => { 
     res.status(200).send("Public content.");
