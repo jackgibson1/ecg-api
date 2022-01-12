@@ -13,6 +13,7 @@ app.use(cors(corsOptions));
 // import db 
 const db = require("./app/models");
 const Role = db.role;
+const Course = db.course;
 
 // allow to re-sync db - remove paramters for prod 
 db.sequelize.sync({force: true}).then(() => { 
@@ -46,7 +47,6 @@ function initial() {
         name: "user"
     }); 
 
-    // field engineer
     Role.create({ 
         id: 2, 
         name: "moderator"
@@ -55,5 +55,20 @@ function initial() {
     Role.create({ 
         id: 3, 
         name: "admin"
+    });
+
+    Course.create({ 
+        id: 1, 
+        name: "anat"
+    }); 
+
+    Course.create({ 
+        id: 2, 
+        name: "intro"
+    }); 
+
+    Course.create({ 
+        id: 3, 
+        name: "diagrams"
     });
 }

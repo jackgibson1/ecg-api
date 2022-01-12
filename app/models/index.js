@@ -27,11 +27,12 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize); 
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.course = require("../models/course.model.js")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, { 
     through: "user_roles", 
     foreignKey: "roleId", 
-    otherKey: "userleId"
+    otherKey: "userId"
 });
 
 db.user.belongsToMany(db.role, { 
@@ -39,6 +40,13 @@ db.user.belongsToMany(db.role, {
     foreignKey: "userId", 
     otherKey: "roleId"
 }); 
+
+db.user_progress = sequelize.define('user_progress', { 
+    position: Sequelize.DataTypes.INTEGER
+}, { timestamps: false });
+
+db.user.belongsToMany(db.course, { through: db.user_progress });
+db.course.belongsToMany(db.user, { through: db.user_progress });
 
 db.ROLES = ["user", "admin", "moderator"]; 
 
