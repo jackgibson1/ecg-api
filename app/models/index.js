@@ -28,6 +28,7 @@ db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize); 
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.course = require("../models/course.model.js")(sequelize, Sequelize);
+db.credit = require("../models/credit.model.js")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, { 
     through: "user_roles", 
@@ -47,6 +48,9 @@ db.user_progress = sequelize.define('user_progress', {
 
 db.user.belongsToMany(db.course, { through: db.user_progress });
 db.course.belongsToMany(db.user, { through: db.user_progress });
+
+db.credit.belongsTo(db.user);
+db.user.hasOne(db.credit);
 
 db.ROLES = ["user", "admin"]; 
 
