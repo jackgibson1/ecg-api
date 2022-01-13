@@ -13,6 +13,13 @@ module.exports = function(app) {
     // can use this to view all posts
     app.get("/api/test/all", controller.allAccess); 
 
+    // get credits for user
+    app.get(
+        "/api/credits", 
+        [authJwt.verifyToken], 
+        controller.userCredits
+    ); 
+
     // get all positions for all courses
     app.get(
         "/api/position/all", 

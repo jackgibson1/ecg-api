@@ -4,6 +4,7 @@ const User = db.user;
 const Role = db.role;
 const User_Progress = db.user_progress;
 const Course = db.course;
+const Credit = db.credit;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -35,6 +36,8 @@ exports.signup = (req, res) => {
                     res.send({ message: "User was registered successfully" });
                 });
             }
+
+            // create course positions and intialise to 0 for all courses
             Course.findAndCountAll().then(result => {
                 result.rows.forEach((row) => {
                     User_Progress.create({
@@ -43,6 +46,12 @@ exports.signup = (req, res) => {
                         courseId: row.dataValues.id
                     });
                 })
+            });
+
+            // create user credits and intialise to 0
+            Credit.create({ 
+                userId: user.id, 
+                credits: 0
             });
         })
         .catch(err => {

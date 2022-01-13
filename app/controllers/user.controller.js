@@ -1,5 +1,6 @@
 const db = require("../models");
 const User_Progress = db.user_progress;
+const Credit = db.credit;
 
 exports.allAccess = (req, res) => { 
     res.status(200).send("Public content.");
@@ -87,5 +88,57 @@ exports.userUpdateCoursePosition = (req, res) => {
     }).catch((err) => { 
         return res.status(500).send({ message: err.message });
     });
+}
 
+exports.userCredits = (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "userId not present!"
+        });
+    }
+
+    Credit.findAll({
+        where: { 
+            userId: userId, 
+        }
+    }).then(result => { 
+        return res.json({ credits: result[0].dataValues.credits });
+    }).catch((err) => { 
+        return res.status(500).send({ message: err.message });
+    });
+}
+
+// only update if course not completed by user!!
+exports.userUpdateCredits = (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    let courseId = req.params.courseId; 
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "userId not present in the headers!"
+        });
+    } else if (!courseId) { 
+        return res.status(403).send({ 
+            message: "courseId not present parameters!"
+        });
+    } else if (typeof updatedPosition == 'undefined') { 
+        return res.status(403).send({ 
+            message: "updated position not present in the request body!"
+        });
+    }
+
+    User_Progress.update(
+        { position: updatedPosition },
+        { where: { 
+            userId: userId, 
+            courseId: courseId
+          }
+        }
+    ).then(() => { 
+        return res.json({ updatedPosition: updatedPosition });
+    }).catch((err) => { 
+        return res.status(500).send({ message: err.message });
+    });
 }
