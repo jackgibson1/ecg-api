@@ -1,3 +1,5 @@
+// model defining courses
+
 module.exports = (sequelize, Sequelize) => { 
     const Role = sequelize.define("courses", { 
         id: { 

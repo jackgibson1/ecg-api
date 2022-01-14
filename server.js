@@ -54,7 +54,7 @@ function initial() {
 
     Course.create({ 
         id: 1, 
-        name: "Anatomy, Blood Flow & Contraction Of The Heart"
+        name: "Heart Fundamentals"
     }); 
 
     Course.create({ 

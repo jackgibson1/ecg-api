@@ -1,3 +1,5 @@
+// model defining a Role - two roles being user and admin
+
 module.exports = (sequelize, Sequelize) => { 
     const Role = sequelize.define("roles", { 
         id: { 
