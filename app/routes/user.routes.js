@@ -20,6 +20,13 @@ module.exports = function(app) {
         controller.userCredits
     ); 
 
+    // update credits for user 
+    app.post(
+        "/api/credits/:courseId", 
+        [authJwt.verifyToken], 
+        controller.userUpdateCredits
+    ); 
+
     // get all positions for all courses
     app.get(
         "/api/position/all", 
@@ -39,6 +46,13 @@ module.exports = function(app) {
         "/api/position/:courseId", 
         [authJwt.verifyToken], 
         controller.userUpdateCoursePosition
+    ); 
+
+    // save completed course for provided courseId
+    app.post(
+        "/api/coursecomplete/:courseId", 
+        [authJwt.verifyToken], 
+        controller.userCompleteCourse
     ); 
 
     // 1. admin will be able to get all course positions for all users

@@ -48,9 +48,9 @@ db.credit.belongsTo(db.user);
 db.user.hasOne(db.credit);
 
 /* define relationship between user and completed courses */ 
-db.user.hasMany(db.user_completed_course); 
-db.user_completed_course.belongsTo(db.user);
-db.user_completed_course.belongsTo(db.course); // table should foreign key reference course 
+db.user.hasMany(db.user_completed_course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); 
+db.user_completed_course.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.user_completed_course.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // table should foreign key reference course 
 
 module.exports = db; 
 

@@ -1,5 +1,6 @@
 const db = require("../models");
 const User_Progress = db.user_progress;
+const User_Completed_Course = db.user_completed_course;
 const Credit = db.credit;
 
 exports.allAccess = (req, res) => { 
@@ -108,9 +109,9 @@ exports.userCredits = (req, res) => {
     }).catch((err) => { 
         return res.status(500).send({ message: err.message });
     });
-}
+};
 
-// only update if course not completed by user!!
+// only credited credit if course not already completed
 exports.userUpdateCredits = (req, res) => { 
     let userId = req.headers["user-id"]; 
     let courseId = req.params.courseId; 
@@ -123,21 +124,50 @@ exports.userUpdateCredits = (req, res) => {
         return res.status(403).send({ 
             message: "courseId not present parameters!"
         });
-    } else if (typeof updatedPosition == 'undefined') { 
-        return res.status(403).send({ 
-            message: "updated position not present in the request body!"
-        });
-    }
+    };
 
-    User_Progress.update(
-        { position: updatedPosition },
-        { where: { 
+    User_Completed_Course.findAll({ 
+        where: { 
             userId: userId, 
-            courseId: courseId
-          }
+            courseId, courseId
         }
-    ).then(() => { 
-        return res.json({ updatedPosition: updatedPosition });
+    }).then((result) => { 
+        console.log(result);
+
+    })
+
+    // Credit.findAll({
+    //     where: { 
+    //         userId: userId, 
+    //     }
+    // }).then(result => { 
+    //     return res.json({ credits: result[0].dataValues.credits });
+    // }).catch((err) => { 
+    //     return res.status(500).send({ message: err.message });
+    // });
+};
+
+// should be a post request
+exports.userCompleteCourse = (req, res) => { 
+    let userId = req.headers["user-id"];
+    let courseId = req.params.courseId; 
+
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "userId not present in the headers!"
+        });
+    } else if (!courseId) { 
+        return res.status(403).send({ 
+            message: "courseId not present parameters!"
+        });
+    };
+
+    User_Completed_Course.create({ 
+        userId: userId, 
+        courseId: courseId, 
+        datecompleted: new Date().toJSON().slice(0, 19).replace('T', ' ')
+    }).then(() => { 
+        return res.json({ message: 'Completed course successfully saved.'});
     }).catch((err) => { 
         return res.status(500).send({ message: err.message });
     });
