@@ -11,7 +11,7 @@ exports.adminBoard = (req, res) => {
     res.status(200).send("Admin Content.");
 };
 
-exports.userAllCoursePositions = (req, res) => { 
+exports.getAllCoursePositions = (req, res) => { 
     let userId = req.headers["user-id"]; 
     
     if(!userId) { 
@@ -35,7 +35,7 @@ exports.userAllCoursePositions = (req, res) => {
     });
 };
 
-exports.userCoursePosition = (req, res) => { 
+exports.getCoursePosition = (req, res) => { 
     let userId = req.headers["user-id"]; 
     let courseId = req.params.courseId; 
     
@@ -57,7 +57,7 @@ exports.userCoursePosition = (req, res) => {
     });
 }
 
-exports.userUpdateCoursePosition = (req, res) => { 
+exports.updateCoursePosition = (req, res) => { 
     let userId = req.headers["user-id"]; 
     let courseId = req.params.courseId; 
 
@@ -91,8 +91,7 @@ exports.userUpdateCoursePosition = (req, res) => {
     });
 };
 
-// save course completion in user completed course
-exports.userCompleteCourse = (req, res) => { 
+exports.completeCourse = async (req, res) => { 
     let userId = req.headers["user-id"];
     let courseId = req.params.courseId; 
 
@@ -106,18 +105,42 @@ exports.userCompleteCourse = (req, res) => {
         });
     };
 
-    User_Completed_Course.create({ 
+    const createdCourse = await User_Completed_Course.create({ 
         userId: userId, 
         courseId: courseId, 
         datecompleted: new Date().toJSON().slice(0, 19).replace('T', ' ')
     }).then(() => { 
-        return res.json({ message: 'Completed course successfully saved.'});
+        return { error: false };
     }).catch((err) => { 
-        return res.status(500).send({ message: err.message });
+        return { error: true, message: err.message };
+    });
+    if (createdCourse.error) return res.status(500).send({ message: createdCourse.message });
+
+    const completedCourses = await User_Completed_Course.findAll({ 
+        where: { 
+            userId: userId, 
+            courseId, courseId
+        }
+    }).then((result) => { 
+        return result;
+    }).catch((err) => { 
+        return false;;
+    }); 
+    if (!completedCourses) return res.status(500).send({ message: "Something has went wrong!" });
+
+    if (completedCourses.length > 1 || completedCourses.length == 0) { 
+        if (completedCourses.length == 0) { 
+            return res.status(500).send({ message: 'User has not completed the course fully yet.' });
+        } 
+        return res.json({ message: 'Successfully completed the course!', creditEarned: false });
+    }; 
+
+    Credit.increment('credits', { by: 1, where: { userId: userId }}).then(() => { 
+        return res.json({ message: "Successfuly completed the course and earned credit!", creditEarned: true });
     });
 };
 
-exports.userCredits = (req, res) => { 
+exports.getCredits = (req, res) => { 
     let userId = req.headers["user-id"]; 
     
     if(!userId) { 
@@ -134,48 +157,5 @@ exports.userCredits = (req, res) => {
         return res.json({ credits: result[0].dataValues.credits });
     }).catch((err) => { 
         return res.status(500).send({ message: err.message });
-    });
-};
-
-// only credited credit if course not already completed
-/* 
-* user first completes course
-* then claims credit (at this stage completed course table will contain record of completion)
-*/
-exports.userUpdateCredits = async (req, res) => { 
-    let userId = req.headers["user-id"]; 
-    let courseId = req.params.courseId; 
-    
-    if(!userId) { 
-        return res.status(403).send({ 
-            message: "userId not present in the headers!"
-        });
-    } else if (!courseId) { 
-        return res.status(403).send({ 
-            message: "courseId not present parameters!"
-        });
-    };
-
-    const completedCourses = await User_Completed_Course.findAll({ 
-        where: { 
-            userId: userId, 
-            courseId, courseId
-        }
-    }).then((result) => { 
-        return result;
-    }).catch((err) => { 
-        return res.status(500).send({ message: err.message });
-    }); 
-
-    console.log(completedCourses);
-    if (completedCourses.length > 1 || completedCourses.length == 0) { 
-        if (completedCourses.length == 0) { 
-            return res.status(500).send({ message: 'User has not complete the course fully yet.' });
-        } 
-        return res.status(500).send({ message: 'User has already completed course and earned credit!' });
-    }; 
-
-    Credit.increment('credits', { by: 1, where: { userId: userId }}).then(() => { 
-        return res.json({ message: "Successfuly incremented credits by 1."});
     });
 };

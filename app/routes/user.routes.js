@@ -17,42 +17,35 @@ module.exports = function(app) {
     app.get(
         "/api/credits", 
         [authJwt.verifyToken], 
-        controller.userCredits
-    ); 
-
-    // update credits for user 
-    app.post(
-        "/api/credits/:courseId", 
-        [authJwt.verifyToken], 
-        controller.userUpdateCredits
+        controller.getCredits
     ); 
 
     // get all positions for all courses
     app.get(
         "/api/position/all", 
         [authJwt.verifyToken], 
-        controller.userAllCoursePositions
+        controller.getAllCoursePositions
     ); 
 
     // get position for provided courseId
     app.get(
         "/api/position/:courseId", 
         [authJwt.verifyToken], 
-        controller.userCoursePosition
+        controller.getCoursePosition
     ); 
 
     // update position for provided courseId
     app.put(
         "/api/position/:courseId", 
         [authJwt.verifyToken], 
-        controller.userUpdateCoursePosition
+        controller.updateCoursePosition
     ); 
 
-    // save completed course for provided courseId
+    // save completed course for provided courseId (and award credit if first completion)
     app.post(
         "/api/coursecomplete/:courseId", 
         [authJwt.verifyToken], 
-        controller.userCompleteCourse
+        controller.completeCourse
     ); 
 
     // 1. admin will be able to get all course positions for all users
