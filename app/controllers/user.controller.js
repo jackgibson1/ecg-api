@@ -95,6 +95,9 @@ exports.completeCourse = async (req, res) => {
     let userId = req.headers["user-id"];
     let courseId = req.params.courseId; 
 
+    console.log("USER ID!!" + userId); 
+    console.log(courseId);
+
     if(!userId) { 
         return res.status(403).send({ 
             message: "userId not present in the headers!"
