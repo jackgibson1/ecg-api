@@ -33,6 +33,7 @@ db.course = require("../models/course.model.js")(sequelize, Sequelize);
 db.user_progress = require("../models/userProgress.model.js")(sequelize, Sequelize);
 db.user_completed_course = require("../models/userCompletedCourse.model.js")(sequelize, Sequelize);
 db.credit = require("../models/credit.model.js")(sequelize, Sequelize);
+db.course_rating = require("../models/courseRating.model.js")(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: "user_roles", foreignKey: "roleId", otherKey: "userId" });
@@ -47,10 +48,19 @@ db.course.belongsToMany(db.user, { through: db.user_progress });
 db.credit.belongsTo(db.user, { foreignKey: { unique: true }});
 db.user.hasOne(db.credit, { foreignKey: { unique: true }});
 
-/* define relationship between user and completed courses (one to many_) */ 
+/* define relationship between user and completed courses (one to many) */ 
 db.user.hasMany(db.user_completed_course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); 
-db.user_completed_course.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-db.user_completed_course.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // table should foreign key reference course 
+db.user_completed_course.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // table should have foreign key reference to course 
+db.user_completed_course.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // table should have foreign key reference to course 
+
+/* define relationship between course and ratings (one to many) */ 
+db.course.hasMany(db.course_rating, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.course_rating.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); 
+db.course_rating.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+
+
+
+
 
 module.exports = db; 
 
