@@ -44,10 +44,10 @@ db.user.belongsToMany(db.course, { through: db.user_progress });
 db.course.belongsToMany(db.user, { through: db.user_progress });
 
 /* define one to one relationship between a user and their credits */
-db.credit.belongsTo(db.user);
-db.user.hasOne(db.credit);
+db.credit.belongsTo(db.user, { foreignKey: { unique: true }});
+db.user.hasOne(db.credit, { foreignKey: { unique: true }});
 
-/* define relationship between user and completed courses */ 
+/* define relationship between user and completed courses (one to many_) */ 
 db.user.hasMany(db.user_completed_course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); 
 db.user_completed_course.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 db.user_completed_course.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // table should foreign key reference course 
