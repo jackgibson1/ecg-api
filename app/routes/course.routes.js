@@ -20,5 +20,11 @@ module.exports = function(app) {
         "/api/ratings", 
         [authJwt.verifyToken], 
         controller.getAllCourseRatings
-    )
+    ); 
+
+    app.post( 
+        "/api/ratings/submit", 
+        [authJwt.verifyToken], 
+        controller.submitCourseRating
+    );
 };

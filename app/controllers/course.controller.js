@@ -34,3 +34,32 @@ exports.getAllCourseRatings = async (req, res) => {
         return res.status(500).send({ message: err.message });
     });
 };
+
+exports.submitCourseRating = async (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    let courseId = req.body.courseId; 
+    let rating = req.body.rating;
+
+    if(typeof userId === 'undefined' || typeof courseId === 'undefined' || typeof rating === 'undefined') { 
+        return res.status(400).send({ message: "Ensure userId, courseId and rating are all set"});
+    }
+
+    await Course_Ratings.create({ 
+        userId: userId, 
+        courseId: courseId, 
+        rating: rating
+    }).then(() => { 
+        return res.json({ success: true, rating: rating });
+    }).catch(async (err) => { 
+        if (err.name == "SequelizeUniqueConstraintError") { 
+            const previousRating = await Course_Ratings.findOne({ 
+                where: { 
+                    courseId: courseId, 
+                    userId: userId
+                }
+            }).then((res) => res);
+            return res.json({ success: false, rating: previousRating.dataValues.rating })
+        }
+        return res.status(500).send({ message: err.message });
+    });
+}
