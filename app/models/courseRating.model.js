@@ -3,7 +3,7 @@
 module.exports = (sequelize, Sequelize) => {
     const courseRating = sequelize.define('course_ratings', { 
         rating: { 
-            type: Sequelize.DataTypes.INTEGER, 
+            type: Sequelize.DataTypes.DOUBLE, 
             allowNull: false, 
         }, 
         courseId: { 

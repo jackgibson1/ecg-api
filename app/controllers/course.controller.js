@@ -9,7 +9,7 @@ exports.getCourseRating = async (req, res) => {
     const ratingTotal = await Course_Ratings.sum('rating', { where: { courseId: courseId} }).then(sum => sum);
     if (totalRatings == 0) return res.json({ rating: 0});
     const roundedAverage = Math.round((ratingTotal / totalRatings) * 2) / 2;
-    return res.json({ rating: roundedAverage });
+    return res.json({ rating: roundedAverage, totalRatings: totalRatings });
 };
 
 exports.getAllCourseRatings = async (req, res) => { 
@@ -22,12 +22,12 @@ exports.getAllCourseRatings = async (req, res) => {
             const ratingTotal = await Course_Ratings.sum('rating', { where: { courseId: courseId} }).then(sum => sum);
 
             if (totalRatings == 0) { 
-                ratings.push({ courseId: courseId, rating: 0});
+                ratings.push({ courseId: courseId, rating: 0, totalRatings: 0 });
                 continue;
             };
             
             const roundedAverage = Math.round((ratingTotal / totalRatings) * 2) / 2;
-            ratings.push({ courseId: courseId, rating: roundedAverage});
+            ratings.push({ courseId: courseId, rating: roundedAverage, totalRatings: totalRatings });
         };
         return res.json(ratings);
     }).catch((err) => { 
