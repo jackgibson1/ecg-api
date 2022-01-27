@@ -11,7 +11,7 @@ module.exports = function(app) {
     }); 
 
     app.get(
-        "/api/rating/:courseId", 
+        "/api/ratings/:courseId", 
         [authJwt.verifyToken], 
         controller.getCourseRating
     );

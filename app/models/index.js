@@ -54,13 +54,9 @@ db.user_completed_course.belongsTo(db.user, { foreignKey: { allowNull: false }, 
 db.user_completed_course.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // table should have foreign key reference to course 
 
 /* define relationship between course and ratings (one to many) */ 
-db.course.hasMany(db.course_rating, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-db.course_rating.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); 
-db.course_rating.belongsTo(db.course, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-
-
-
-
+db.course.hasMany(db.course_rating, { foreignKey: 'courseId', onDelete: 'CASCADE' });
+db.course_rating.belongsTo(db.user, { foreignKey: 'userId', onDelete: 'CASCADE' }); 
+db.course_rating.belongsTo(db.course, { foreignKey: 'courseId', onDelete: 'CASCADE' });
 
 module.exports = db; 
 

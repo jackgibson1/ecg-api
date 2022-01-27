@@ -7,6 +7,7 @@ exports.getCourseRating = async (req, res) => {
 
     const totalRatings = await Course_Ratings.count({ where: { courseId: courseId} }).then(count => count);
     const ratingTotal = await Course_Ratings.sum('rating', { where: { courseId: courseId} }).then(sum => sum);
+    if (totalRatings == 0) return res.json({ rating: 0});
     const roundedAverage = Math.round((ratingTotal / totalRatings) * 2) / 2;
     return res.json({ rating: roundedAverage });
 };

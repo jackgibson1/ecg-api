@@ -5,7 +5,17 @@ module.exports = (sequelize, Sequelize) => {
         rating: { 
             type: Sequelize.DataTypes.INTEGER, 
             allowNull: false, 
-        }
+        }, 
+        courseId: { 
+            type: Sequelize.DataTypes.INTEGER, 
+            allowNull: false, 
+            unique:"comp_key"
+        }, 
+        userId: { 
+            type: Sequelize.DataTypes.INTEGER, 
+            allowNull: false, 
+            unique:"comp_key"
+        }, 
     }, { timestamps: false }); 
 
     return courseRating; 
