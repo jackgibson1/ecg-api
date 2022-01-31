@@ -2,6 +2,8 @@ const db = require("../models");
 const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+var fetch = require ('node-fetch');
+const { secret } = require("../config/auth.config");
 
 const User = db.user;
 const Role = db.role;
@@ -105,4 +107,30 @@ exports.signin = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+exports.verifyCaptcha = async (req, res) => { 
+    const secretKey = req.body.secretKey; 
+    const responseToken = req.body.responseToken;
+
+    if (!secretKey || !responseToken) { 
+        return res.status(404).send({message: "Ensure secret and response keys are both set."})
+    }; 
+
+    // Validate is Human
+    const isHuman = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+        method: "post",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+        },
+        body: `secret=${secretKey}&response=${responseToken}`
+    })
+    .then(res => res.json())
+    .then(json => json.success)
+    .catch(err => {
+        throw new Error(`Error in Google Siteverify API. ${err.message}`)
+    });
+
+    res.json(isHuman);
+}
 

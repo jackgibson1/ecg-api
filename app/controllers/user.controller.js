@@ -139,7 +139,7 @@ exports.completeCourse = async (req, res) => {
     }; 
 
     Credit.increment('credits', { by: 1, where: { userId: userId }}).then(() => { 
-        return res.json({ message: "Successfuly completed the course and earned credit!", creditEarned: true });
+        return res.json({ message: "Successfuly completed the course and earned a credit!", creditEarned: true });
     });
 };
 
