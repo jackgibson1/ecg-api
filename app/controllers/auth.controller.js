@@ -109,10 +109,12 @@ exports.signin = (req, res) => {
 };
 
 exports.verifyCaptcha = async (req, res) => { 
-    const secretKey = req.body.secretKey; 
+    // secret key for communication between this server and reCAPTCHA
+    const secretKey = "6Ld6P00eAAAAAKMB6zYlO1kchNw1X_ROUuefv4tW";
+    // response token generated from react app
     const responseToken = req.body.responseToken;
 
-    if (!secretKey || !responseToken) { 
+    if (!responseToken) { 
         return res.status(404).send({message: "Ensure secret and response keys are both set."})
     }; 
 
