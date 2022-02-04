@@ -1,12 +1,9 @@
 stages: 
  - test
-
-# This folder is cached between builds
-cache:
-  paths:
-    - node_modules/
-
+ 
 test:
+  services: 
+    - ecgrunner
   script:
     - npm install
     - npm test
