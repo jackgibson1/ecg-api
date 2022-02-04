@@ -34,6 +34,8 @@ db.user_progress = require("../models/userProgress.model.js")(sequelize, Sequeli
 db.user_completed_course = require("../models/userCompletedCourse.model.js")(sequelize, Sequelize);
 db.credit = require("../models/credit.model.js")(sequelize, Sequelize);
 db.course_rating = require("../models/courseRating.model.js")(sequelize, Sequelize);
+db.quiz = require("../models/quiz.model.js")(sequelize, Sequelize);
+db.user_quiz_scores = require("../models/userQuizScores.model.js")(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: "user_roles", foreignKey: "roleId", otherKey: "userId" });
@@ -58,5 +60,10 @@ db.course.hasMany(db.course_rating, { foreignKey: 'courseId', onDelete: 'CASCADE
 db.course_rating.belongsTo(db.user, { foreignKey: 'userId', onDelete: 'CASCADE' }); 
 db.course_rating.belongsTo(db.course, { foreignKey: 'courseId', onDelete: 'CASCADE' });
 
+/* user has many quizzes (and quiz can have many users*/ 
+db.user.belongsToMany(db.quiz, { through: db.user_quiz_scores });
+db.quiz.belongsToMany(db.user, { through: db.user_quiz_scores });
+// through quiz best scores - contains userId and quizId as composite key
+// has field bestScore
 module.exports = db; 
 

@@ -5,6 +5,7 @@ const cors = require("cors");
 const app = express(); 
 
 var corsOptions = { 
+    // add in deployment origin
     origin: "http://localhost:8081"
 }; 
 
@@ -24,7 +25,7 @@ db.sequelize.sync({force: true}).then(() => {
 // parse requests of content-type - application/json 
 app.use(bodyParser.json());
 
-//parse reuqests of content-type - application/x-www-form-urlencoded 
+//parse requests of content-type - application/x-www-form-urlencoded 
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 // simple first route 
@@ -43,43 +44,13 @@ app.listen(PORT, () => {
 })
 
 function initial() { 
-    Role.create({ 
-        id: 1, 
-        name: "user"
-    }); 
+    Role.create({ id: 1, name: "user" }); 
+    Role.create({ id: 2, name: "admin" });
 
-    Role.create({ 
-        id: 2, 
-        name: "admin"
-    });
-
-    Course.create({ 
-        id: 1, 
-        name: "Heart Fundamentals"
-    }); 
-
-    Course.create({ 
-        id: 2, 
-        name: "ECG Introduction"
-    }); 
-
-    Course.create({ 
-        id: 3, 
-        name: "Parts Of The ECG Explained"
-    });
-
-    Course.create({ 
-        id: 4, 
-        name: "How To Read An ECG"
-    });
-
-    Course.create({ 
-        id: 5, 
-        name: "How To Document An ECG"
-    });
-
-    Course.create({ 
-        id: 6, 
-        name: "Conditions"
-    });
+    Course.create({ id: 1, name: "Heart Fundamentals" }); 
+    Course.create({ id: 2, name: "ECG Introduction" }); 
+    Course.create({ id: 3, name: "Parts Of The ECG Explained" });
+    Course.create({ id: 4, name: "How To Read An ECG" });
+    Course.create({ id: 5, name: "How To Document An ECG" });
+    Course.create({ id: 6, name: "Conditions" });
 }
