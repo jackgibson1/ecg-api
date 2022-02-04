@@ -1,9 +1,11 @@
+image: node:latest 
+services: 
+  - ecgrunner
+
 stages: 
  - test
- 
+
 test:
-  services: 
-    - ecgrunner
   script:
     - npm install
     - npm test
