@@ -1,6 +1,4 @@
 image: node:latest 
-tags: 
-  - ecgrunner
 
 stages: 
  - test
