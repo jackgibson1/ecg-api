@@ -1,5 +1,5 @@
 image: node:latest 
-services: 
+tags: 
   - ecgrunner
 
 stages: 
