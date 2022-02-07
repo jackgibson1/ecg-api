@@ -1,5 +1,5 @@
 const db = require("../models"); 
-const Quiz = db.quiz;
+const Credit = db.credit;
 const User_Quiz_Scores = db.user_quiz_scores;
 
 exports.getQuizScore = async (req, res) => { 
@@ -59,6 +59,7 @@ exports.updateCourseRating = async (req, res) => {
     } 
 
     if (parseInt(previousScore) === -1) { 
+        Credit.increment('credits', { by: 1, where: { userId: userId }});
         return res.json({ creditEarned: true });
     } else { 
         return res.json({ creditEarned: false })
