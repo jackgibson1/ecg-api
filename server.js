@@ -15,6 +15,8 @@ app.use(cors(corsOptions));
 const db = require("./app/models");
 const Role = db.role;
 const Course = db.course;
+const Quiz = db.quiz;
+const User = db.user;
 
 // allow to re-sync db - remove paramters for prod 
 db.sequelize.sync({force: true}).then(() => { 
@@ -36,6 +38,7 @@ app.get("/", (req, res) => {
 require('./app/routes/auth.routes')(app); 
 require('./app/routes/user.routes')(app);
 require('./app/routes/course.routes')(app);
+require('./app/routes/quiz.routes')(app);
 
 // set port, listen for requests 
 const PORT = process.env.PORT || 8080; 
@@ -44,6 +47,7 @@ app.listen(PORT, () => {
 })
 
 function initial() { 
+
     Role.create({ id: 1, name: "user" }); 
     Role.create({ id: 2, name: "admin" });
 
@@ -53,4 +57,13 @@ function initial() {
     Course.create({ id: 4, name: "How To Read An ECG" });
     Course.create({ id: 5, name: "How To Document An ECG" });
     Course.create({ id: 6, name: "Conditions" });
+
+    Quiz.create({ id: 1, name: "Heart Fundamentals" }); 
+    Quiz.create({ id: 2, name: "ECG Introduction" }); 
+    Quiz.create({ id: 3, name: "Parts Of The ECG Explained" });
+    Quiz.create({ id: 4, name: "How To Read An ECG" });
+    Quiz.create({ id: 5, name: "How To Document An ECG" });
+    Quiz.create({ id: 6, name: "Conditions" });
+
+    User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' });
 }

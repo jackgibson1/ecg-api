@@ -60,10 +60,8 @@ db.course.hasMany(db.course_rating, { foreignKey: 'courseId', onDelete: 'CASCADE
 db.course_rating.belongsTo(db.user, { foreignKey: 'userId', onDelete: 'CASCADE' }); 
 db.course_rating.belongsTo(db.course, { foreignKey: 'courseId', onDelete: 'CASCADE' });
 
-/* user has many quizzes (and quiz can have many users*/ 
+/* user has many quizzes (and quiz can have many users) */ 
 db.user.belongsToMany(db.quiz, { through: db.user_quiz_scores });
 db.quiz.belongsToMany(db.user, { through: db.user_quiz_scores });
-// through quiz best scores - contains userId and quizId as composite key
-// has field bestScore
 module.exports = db; 
 

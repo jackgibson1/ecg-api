@@ -9,7 +9,9 @@ const User = db.user;
 const Role = db.role;
 const User_Progress = db.user_progress;
 const Course = db.course;
+const Quiz = db.quiz;
 const Credit = db.credit;
+const User_Quiz_Scores = db.user_quiz_scores;
 const Op = db.Sequelize.Op;
 
 exports.signup = (req, res) => {
@@ -39,13 +41,24 @@ exports.signup = (req, res) => {
                 });
             }
 
-            // create course positions and intialise to 0 for all courses
+            // Create course positions and intialise to 0 for all courses
             Course.findAndCountAll().then(result => {
                 result.rows.forEach((row) => {
                     User_Progress.create({
                         position: 0,
                         userId: user.id, 
                         courseId: row.dataValues.id
+                    });
+                })
+            });
+
+            // Initialise all users quiz scores to -1
+            Quiz.findAndCountAll().then(result => {
+                result.rows.forEach((row) => {
+                    User_Quiz_Scores.create({
+                        bestScore: -1,
+                        userId: user.id, 
+                        quizId: row.dataValues.id
                     });
                 })
             });
