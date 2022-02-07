@@ -44,20 +44,23 @@ exports.updateCourseRating = async (req, res) => {
 
     if(typeof userId === 'undefined' || typeof quizId === 'undefined' || typeof score === 'undefined') { 
         return res.status(400).send({ message: "Ensure userId, courseId and rating are all set"});
-    }
+    } else if (isNaN(quizId) || isNaN(score)) { 
+        return res.status(400).send({ message: "Please enter a valid quizId or score!"}); 
+    };
 
     const previousScore = await User_Quiz_Scores.findAll({ where: { userId, quizId }})
     .then((res) => res[0].dataValues.bestScore); 
 
     if (parseInt(score) > previousScore) { 
         User_Quiz_Scores.update({ bestScore: score }, { where: { userId, quizId }})
-        .then(() => { 
-            return res.json({ creditEarned: true });
-        }).catch((err) => { 
+        .catch((err) => { 
             return res.status(500).send({ message: err.message });
         })
-    } else { 
-        return res.json({ creditEarned: false });
-    }
+    } 
 
+    if (parseInt(previousScore) === -1) { 
+        return res.json({ creditEarned: true });
+    } else { 
+        return res.json({ creditEarned: false })
+    }
 }
