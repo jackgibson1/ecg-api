@@ -37,13 +37,13 @@ exports.getAllQuizScores = async (req, res) => {
     });
 };
 
-exports.updateCourseRating = async (req, res) => { 
+exports.updateQuizScore = async (req, res) => { 
     let userId = req.headers["user-id"]; 
     let quizId = req.body.quizId; 
     let score = req.body.score;
 
     if(typeof userId === 'undefined' || typeof quizId === 'undefined' || typeof score === 'undefined') { 
-        return res.status(400).send({ message: "Ensure userId, courseId and rating are all set"});
+        return res.status(400).send({ message: "Ensure userId, quizId and rating are all set"});
     } else if (isNaN(quizId) || isNaN(score)) { 
         return res.status(400).send({ message: "Please enter a valid quizId or score!"}); 
     };

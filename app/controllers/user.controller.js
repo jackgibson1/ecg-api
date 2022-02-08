@@ -3,6 +3,7 @@ const User_Progress = db.user_progress;
 const User_Completed_Course = db.user_completed_course;
 const Credit = db.credit;
 
+
 exports.allAccess = (req, res) => { 
     res.status(200).send("Public content.");
 };

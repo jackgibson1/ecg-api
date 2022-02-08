@@ -25,6 +25,6 @@ module.exports = function(app) {
     app.put(
         "/api/quizscores", 
         [authJwt.verifyToken], 
-        controller.updateCourseRating
+        controller.updateQuizScore
     );
 };

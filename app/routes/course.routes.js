@@ -27,4 +27,10 @@ module.exports = function(app) {
         [authJwt.verifyToken], 
         controller.submitCourseRating
     );
+
+    app.get( 
+        "/api/allcoursecompletions", 
+        [authJwt.verifyToken], 
+        controller.getAllCourseCompletions
+    );
 };

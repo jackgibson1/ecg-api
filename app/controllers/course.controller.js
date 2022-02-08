@@ -1,6 +1,7 @@
 const db = require("../models"); 
 const Courses = db.course;
 const Course_Ratings = db.course_rating;
+const User_Completed_Course = db.user_completed_course;
 
 exports.getCourseRating = async (req, res) => { 
     let courseId = req.params.courseId; 
@@ -60,6 +61,35 @@ exports.submitCourseRating = async (req, res) => {
             }).then((res) => res);
             return res.json({ success: false, rating: previousRating.dataValues.rating })
         }
+        return res.status(500).send({ message: err.message });
+    });
+}
+
+exports.getAllCourseCompletions = async (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "No userId provided!"
+        });
+    }
+
+    let courseCompletions = [];
+    await Courses.findAll().then(async (courses) => { 
+        for(const course of courses) { 
+            const courseId = course.dataValues.id; 
+
+            const datecompleted = await User_Completed_Course.findAll({ where: { courseId, userId }, order: [['datecompleted', 'ASC']]})
+            .then((res) => res);
+
+            if (datecompleted[0]) { 
+                courseCompletions.push({ courseId: courseId, completed: true, firstCompletionDate: datecompleted[0].dataValues.datecompleted });
+            } else { 
+                courseCompletions.push({ courseId: courseId, completed: false });
+            }
+        }
+        return res.json(courseCompletions);
+    }).catch((err) => { 
         return res.status(500).send({ message: err.message });
     });
 }
