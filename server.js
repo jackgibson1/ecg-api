@@ -20,7 +20,7 @@ const User = db.user;
 
 // allow to re-sync db - remove paramters for prod 
 // {force: true}
-db.sequelize.sync().then(() => { 
+db.sequelize.sync({force: true}).then(() => { 
     console.log("Drop and Resync DB"); 
     initial();
 });
@@ -49,22 +49,22 @@ app.listen(PORT, () => {
 
 function initial() { 
 
-    // Role.create({ id: 1, name: "user" }); 
-    // Role.create({ id: 2, name: "admin" });
+    Role.create({ id: 1, name: "user" }); 
+    Role.create({ id: 2, name: "admin" });
 
-    // Course.create({ id: 1, name: "Heart Fundamentals" }); 
-    // Course.create({ id: 2, name: "ECG Introduction" }); 
-    // Course.create({ id: 3, name: "Parts Of The ECG Explained" });
-    // Course.create({ id: 4, name: "How To Read An ECG" });
-    // Course.create({ id: 5, name: "How To Document An ECG" });
-    // Course.create({ id: 6, name: "Conditions" });
+    Course.create({ id: 1, name: "Heart Fundamentals" }); 
+    Course.create({ id: 2, name: "ECG Introduction" }); 
+    Course.create({ id: 3, name: "Parts Of The ECG Explained" });
+    Course.create({ id: 4, name: "How To Read An ECG" });
+    Course.create({ id: 5, name: "How To Document An ECG" });
+    Course.create({ id: 6, name: "Conditions" });
 
-    // Quiz.create({ id: 1, name: "Heart Fundamentals" }); 
-    // Quiz.create({ id: 2, name: "ECG Introduction" }); 
-    // Quiz.create({ id: 3, name: "Parts Of The ECG Explained" });
-    // Quiz.create({ id: 4, name: "How To Read An ECG" });
-    // Quiz.create({ id: 5, name: "How To Document An ECG" });
-    // Quiz.create({ id: 6, name: "Conditions" });
+    Quiz.create({ id: 1, name: "Heart Fundamentals" }); 
+    Quiz.create({ id: 2, name: "ECG Introduction" }); 
+    Quiz.create({ id: 3, name: "Parts Of The ECG Explained" });
+    Quiz.create({ id: 4, name: "How To Read An ECG" });
+    Quiz.create({ id: 5, name: "How To Document An ECG" });
+    Quiz.create({ id: 6, name: "Conditions" });
 
     // User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' });
 }

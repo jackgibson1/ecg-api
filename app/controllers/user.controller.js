@@ -112,7 +112,7 @@ exports.completeCourse = async (req, res) => {
     const createdCourse = await User_Completed_Course.create({ 
         userId: userId, 
         courseId: courseId, 
-        datecompleted: new Date().toJSON().slice(0, 19).replace('T', ' ')
+        datecompleted: new Date().toISOString().split('T')[0]
     }).then(() => { 
         return { error: false };
     }).catch((err) => { 
