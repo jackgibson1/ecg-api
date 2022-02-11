@@ -66,5 +66,5 @@ function initial() {
     Quiz.create({ id: 5, name: "How To Document An ECG" });
     Quiz.create({ id: 6, name: "Conditions" });
 
-    // User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' });
+    User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' });
 }

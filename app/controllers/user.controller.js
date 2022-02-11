@@ -1,4 +1,5 @@
 const db = require("../models");
+const Users = db.user;
 const User_Progress = db.user_progress;
 const User_Completed_Course = db.user_completed_course;
 const Credit = db.credit;
@@ -11,6 +12,23 @@ exports.allAccess = (req, res) => {
 exports.adminBoard = (req, res) => { 
     res.status(200).send("Admin Content.");
 };
+
+exports.getDateCreated = (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "No userId provided!"
+        });
+    }
+
+    Users.findOne({ where: { id: userId }})
+    .then((result) => { 
+        let dateObj = new Date(result.dataValues.createdAt);
+        res.json({ created: dateObj.toLocaleDateString('en-UK') });
+    })
+    
+}
 
 exports.getAllCoursePositions = (req, res) => { 
     let userId = req.headers["user-id"]; 

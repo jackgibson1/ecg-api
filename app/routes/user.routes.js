@@ -13,6 +13,14 @@ module.exports = function(app) {
     // can use this to view all posts
     app.get("/api/test/all", controller.allAccess); 
 
+    // get date user created account 
+    app.get(
+        "/api/datecreated", 
+        [authJwt.verifyToken], 
+        controller.getDateCreated
+    ); 
+
+
     // get credits for user
     app.get(
         "/api/credits", 
