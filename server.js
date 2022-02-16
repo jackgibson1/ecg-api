@@ -40,6 +40,7 @@ require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 require('./app/routes/course.routes')(app);
 require('./app/routes/quiz.routes')(app);
+require('./app/routes/admin.routes')(app);
 
 // set port, listen for requests 
 const PORT = process.env.PORT || 8080; 
@@ -48,7 +49,6 @@ app.listen(PORT, () => {
 })
 
 function initial() { 
-
     Role.create({ id: 1, name: "user" }); 
     Role.create({ id: 2, name: "admin" });
 
@@ -66,5 +66,6 @@ function initial() {
     Quiz.create({ id: 5, name: "How To Document An ECG" });
     Quiz.create({ id: 6, name: "Conditions" });
 
-    User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' });
+    User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' })
+    .then((user) => user.setRoles([1, 2]));
 }

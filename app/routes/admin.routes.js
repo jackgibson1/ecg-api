@@ -1,13 +1,38 @@
-// get all users 
+const { authJwt } = require("../middleware");
+const controller = require("../controllers/admin.controller"); 
 
-// get courses for each user 
+module.exports = function(app) { 
+    app.use(function(req, res, next) { 
+        res.header( 
+            "Access-Control-Allow-Headers", 
+            "x-access-token, Origin, Content-Type, Accept"
+        ); 
+        next();
+    }); 
 
-// get quizzes for each user 
+    // get all users 
+    app.get(
+        "/api/admin/all-users", 
+        [authJwt.isAdmin, authJwt.verifyToken], 
+        controller.getAllUsers      
+    );
 
-// delete user 
+    // get courses for each user 
 
-// reset all stats for user 
+    // get quizzes for each user 
 
-// delete post 
+    // delete user 
 
-// delete comment
+    // reset all stats for user 
+
+    // delete post 
+
+    // delete comment
+
+};
+
+
+
+
+
+

@@ -24,7 +24,13 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => { 
-    User.findByPk(req.userId).then(user => { 
+    let adminId = req.headers["admin-user-id"]; 
+
+    if (!adminId) { 
+        return res.status(403).send({ message: "Admin user ID is not set within header!"});
+    }
+
+    User.findByPk(adminId).then(user => { 
         user.getRoles().then(roles => { 
             for(let i=0; i<roles.length; i++) { 
                 if(roles[i].name === "admin") { 
