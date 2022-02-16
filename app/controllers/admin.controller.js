@@ -7,6 +7,7 @@ const db = require("../models");
 const users = db.user;
 
 // get all users 
+// for each user return id, username, email, createdAt, totalCoursesComplete & totalQuizzesComplete
 exports.getAllUsers = async (req, res) => { 
     const usersTable = await users.findAll({ 
         attributes: [
@@ -21,16 +22,18 @@ exports.getAllUsers = async (req, res) => {
     res.json(usersTable);
 };
 
-// get courses for each user 
-
-// get quizzes for each user 
-
 // delete user 
+exports.deleteUser = async (req, res) => { 
+    const userId = req.body.userId; 
+    if (!userId) return res.status(404).send({ message: "Ensure userId to be deleted is set in body!"});
+    await users.destroy({ where: { id: userId }})
+    .then((rowDeleted) => { 
+        if (rowDeleted === 1) res.json({ success: true }); 
+        else res.json({ success: false });
+    })
+    .catch(() => res.json({ success: false }));
+}
 
 // reset all stats for user 
-
 // delete post 
-
 // delete comment
-
-// SELECT `id`, `username`, `email`, `createdAt`, (SELECT COUNT(*) FROM user_completed_courses WHERE users.id = user_completed_courses.userId) AS `totalAmount` FROM `users` AS `users`;

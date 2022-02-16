@@ -17,9 +17,11 @@ module.exports = function(app) {
         controller.getAllUsers      
     );
 
-    // get courses for each user 
-
-    // get quizzes for each user 
+    app.delete( 
+        "/api/admin/delete-user", 
+        [authJwt.isAdmin, authJwt.verifyToken], 
+        controller.deleteUser
+    )
 
     // delete user 
 
