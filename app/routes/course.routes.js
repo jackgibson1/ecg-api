@@ -10,26 +10,30 @@ module.exports = function(app) {
         next();
     }); 
 
+    // get rating for respective course
     app.get(
-        "/api/ratings/:courseId", 
+        "/api/course/rating/:courseId", 
         [authJwt.verifyToken], 
         controller.getCourseRating
     );
 
+    // get rating for all courses
     app.get( 
-        "/api/ratings", 
+        "/api/course/ratings/all", 
         [authJwt.verifyToken], 
         controller.getAllCourseRatings
     ); 
 
+    // submit rating for respective course
     app.post( 
-        "/api/ratings/submit", 
+        "/api/course/rating/submit", 
         [authJwt.verifyToken], 
         controller.submitCourseRating
     );
 
+    // get all courses and their completion status
     app.get( 
-        "/api/allcoursecompletions", 
+        "/api/course/completions/all", 
         [authJwt.verifyToken], 
         controller.getAllCourseCompletions
     );
@@ -60,6 +64,5 @@ module.exports = function(app) {
         "/api/course/complete/:courseId", 
         [authJwt.verifyToken], 
         controller.completeCourse
-    ); 
-    
+    );   
 };

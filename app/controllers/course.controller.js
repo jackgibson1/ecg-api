@@ -1,5 +1,7 @@
 /* 
  * Controller for all course related logic 
+ * Course ratings, course positions and course completions
+ * Users earn credits for first time completion of any course
 */
 const db = require("../models"); 
 const Courses = db.course;
@@ -84,39 +86,6 @@ exports.submitCourseRating = async (req, res) => {
     });
 }
 
-// Get a list of all courses and whether they have been completed or not for a user
-exports.getAllCourseCompletions = async (req, res) => { 
-    let userId = req.headers["user-id"]; 
-    
-    if(!userId) { 
-        return res.status(403).send({ 
-            message: "No userId provided!"
-        });
-    }
-
-    let courseCompletions = [];
-    await Courses.findAll().then(async (courses) => { 
-        for(const course of courses) { 
-            const courseId = course.dataValues.id; 
-
-            // note that the order is ascending by date - this allows us to get the earliest completion first
-            const datecompleted = await User_Completed_Course.findAll({ where: { courseId, userId }, order: [['datecompleted', 'ASC']]})
-            .then((res) => res);
-
-            // the earliest completion
-            if (datecompleted[0]) { 
-                // if completed object should contain completion date
-                courseCompletions.push({ courseId: courseId, completed: true, firstCompletionDate: datecompleted[0].dataValues.datecompleted });
-            } else { 
-                courseCompletions.push({ courseId: courseId, completed: false });
-            }
-        }
-        return res.json(courseCompletions);
-    }).catch((err) => { 
-        return res.status(500).send({ message: err.message });
-    });
-}
-
 // Return course relative position for a user
 exports.getCoursePosition = (req, res) => { 
     let userId = req.headers["user-id"]; 
@@ -139,32 +108,6 @@ exports.getCoursePosition = (req, res) => {
         return res.status(500).send({ message: err.message });
     });
 }
-
-// Get a list of all courses and the users respective position on that course
-// This allows us to calculate how much a user is through a course
-exports.getAllCoursePositions = (req, res) => { 
-    let userId = req.headers["user-id"]; 
-    
-    if(!userId) { 
-        return res.status(403).send({ 
-            message: "No userId provided!"
-        });
-    }
-    
-    User_Progress.findAll({
-        where: { 
-            userId: userId
-        }
-    }).then(results => { 
-        let allCourseProgresses = []; 
-        results.forEach((row) => { 
-            allCourseProgresses.push( { courseId: row.courseId, position: row.position }); 
-        });
-        return res.json(allCourseProgresses);
-    }).catch((err) => { 
-        return res.status(500).send({ message: err.message });
-    });
-};
 
 // Update course position for a user 
 // This is used when navigating through a course to ensure user can return to same course position
@@ -197,6 +140,32 @@ exports.updateCoursePosition = (req, res) => {
         }
     ).then(() => { 
         return res.json({ updatedPosition: updatedPosition });
+    }).catch((err) => { 
+        return res.status(500).send({ message: err.message });
+    });
+};
+
+// Get a list of all courses and the users respective position on that course
+// This allows us to calculate how much a user is through a course
+exports.getAllCoursePositions = (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "No userId provided!"
+        });
+    }
+    
+    User_Progress.findAll({
+        where: { 
+            userId: userId
+        }
+    }).then(results => { 
+        let allCourseProgresses = []; 
+        results.forEach((row) => { 
+            allCourseProgresses.push( { courseId: row.courseId, position: row.position }); 
+        });
+        return res.json(allCourseProgresses);
     }).catch((err) => { 
         return res.status(500).send({ message: err.message });
     });
@@ -259,3 +228,38 @@ exports.completeCourse = async (req, res) => {
         return res.json({ message: "Successfuly completed the course and earned a credit!", creditEarned: true });
     });
 };
+
+// Get a list of all courses and whether they have been completed or not for a user
+exports.getAllCourseCompletions = async (req, res) => { 
+    let userId = req.headers["user-id"]; 
+    
+    if(!userId) { 
+        return res.status(403).send({ 
+            message: "No userId provided!"
+        });
+    }
+
+    let courseCompletions = [];
+    await Courses.findAll().then(async (courses) => { 
+        for(const course of courses) { 
+            const courseId = course.dataValues.id; 
+
+            // note that the order is ascending by date - this allows us to get the earliest completion first
+            const datecompleted = await User_Completed_Course.findAll({ where: { courseId, userId }, order: [['datecompleted', 'ASC']]})
+            .then((res) => res);
+
+            // the earliest completion
+            if (datecompleted[0]) { 
+                // if completed object should contain completion date
+                courseCompletions.push({ courseId: courseId, completed: true, firstCompletionDate: datecompleted[0].dataValues.datecompleted });
+            } else { 
+                courseCompletions.push({ courseId: courseId, completed: false });
+            }
+        }
+        return res.json(courseCompletions);
+    }).catch((err) => { 
+        return res.status(500).send({ message: err.message });
+    });
+}
+
+

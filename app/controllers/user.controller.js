@@ -1,3 +1,9 @@
+/* 
+ * Controller for all user related logic 
+ * Date user created account & users total credits
+ * Note: Logic for incrementation of user credits is done within course/quiz controllers
+*/
+
 const db = require("../models");
 const Users = db.user;
 const Credit = db.credit;
