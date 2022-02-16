@@ -12,14 +12,14 @@ module.exports = function(app) {
 
     // get date user created account 
     app.get(
-        "/api/datecreated", 
+        "/api/user/datecreated", 
         [authJwt.verifyToken], 
         controller.getDateCreated
     ); 
 
     // get credits for user
     app.get(
-        "/api/credits", 
+        "/api/user/credits", 
         [authJwt.verifyToken], 
         controller.getCredits
     ); 

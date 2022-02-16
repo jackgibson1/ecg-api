@@ -30,12 +30,12 @@ db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize); 
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.course = require("../models/course.model.js")(sequelize, Sequelize);
-db.user_progress = require("../models/userProgress.model.js")(sequelize, Sequelize);
-db.user_completed_course = require("../models/userCompletedCourse.model.js")(sequelize, Sequelize);
+db.user_progress = require("./user-course-progress.model.js")(sequelize, Sequelize);
+db.user_completed_course = require("./user-course-completed.model.js")(sequelize, Sequelize);
 db.credit = require("../models/credit.model.js")(sequelize, Sequelize);
-db.course_rating = require("../models/courseRating.model.js")(sequelize, Sequelize);
+db.course_rating = require("./course-rating.model.js")(sequelize, Sequelize);
 db.quiz = require("../models/quiz.model.js")(sequelize, Sequelize);
-db.user_quiz_scores = require("../models/userQuizScores.model.js")(sequelize, Sequelize);
+db.user_quiz_scores = require("./user-quiz-scores.model.js")(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: "user_roles", foreignKey: "roleId", otherKey: "userId" });

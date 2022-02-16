@@ -10,20 +10,23 @@ module.exports = function(app) {
         next();
     }); 
 
+    // get users best score for provided quiz
     app.get(
-        "/api/quizscores/:quizId", 
+        "/api/quiz/score/:quizId", 
         [authJwt.verifyToken], 
         controller.getQuizScore
     );
 
+    // get list of all quiz scores for user
     app.get(
-        "/api/allquizscores", 
+        "/api/quiz/scores/all", 
         [authJwt.verifyToken], 
         controller.getAllQuizScores
     );
 
+    // update quiz score
     app.put(
-        "/api/quizscores", 
+        "/api/quiz/score", 
         [authJwt.verifyToken], 
         controller.updateQuizScore
     );
