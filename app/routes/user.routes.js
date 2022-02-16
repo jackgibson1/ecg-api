@@ -20,7 +20,6 @@ module.exports = function(app) {
         controller.getDateCreated
     ); 
 
-
     // get credits for user
     app.get(
         "/api/credits", 
