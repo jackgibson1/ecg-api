@@ -3,7 +3,6 @@ const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 var fetch = require ('node-fetch');
-const { secret } = require("../config/auth.config");
 
 const User = db.user;
 const Role = db.role;
