@@ -1,3 +1,8 @@
+/* 
+ * Controller for authentication logic
+ * signup, signin and verifying google captcha 
+*/
+
 const db = require("../models");
 const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");

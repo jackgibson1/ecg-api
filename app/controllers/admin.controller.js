@@ -1,3 +1,7 @@
+/* 
+* Controller containing all logic for administrator abilities
+*/
+
 // get all users 
 
 // get courses for each user 

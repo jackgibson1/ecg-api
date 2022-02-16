@@ -33,4 +33,33 @@ module.exports = function(app) {
         [authJwt.verifyToken], 
         controller.getAllCourseCompletions
     );
+
+    // get position for provided courseId
+    app.get(
+        "/api/course/position/:courseId", 
+        [authJwt.verifyToken], 
+        controller.getCoursePosition
+    ); 
+
+    // get all positions for all courses
+    app.get(
+        "/api/course/positions/all", 
+        [authJwt.verifyToken], 
+        controller.getAllCoursePositions
+    ); 
+
+    // update position for provided courseId
+    app.put(
+        "/api/course/position/:courseId", 
+        [authJwt.verifyToken], 
+        controller.updateCoursePosition
+    ); 
+
+    // save completed course for provided courseId (and award credit if first completion)
+    app.post(
+        "/api/course/complete/:courseId", 
+        [authJwt.verifyToken], 
+        controller.completeCourse
+    ); 
+    
 };
