@@ -1,5 +1,6 @@
 const express = require("express"); 
 const bodyParser = require("body-parser"); 
+const genUsername = require("unique-username-generator");
 const cors = require("cors"); 
 const app = express(); 
 require('dotenv').config();
@@ -48,24 +49,42 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 })
 
-function initial() { 
+async function initial() { 
     Role.create({ id: 1, name: "user" }); 
     Role.create({ id: 2, name: "admin" });
 
-    Course.create({ id: 1, name: "Heart Fundamentals" }); 
-    Course.create({ id: 2, name: "ECG Introduction" }); 
-    Course.create({ id: 3, name: "Parts Of The ECG Explained" });
-    Course.create({ id: 4, name: "How To Read An ECG" });
-    Course.create({ id: 5, name: "How To Document An ECG" });
-    Course.create({ id: 6, name: "Conditions" });
+    await User.create({ id: 1, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 2, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 3, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 4, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 5, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 6, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 7, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 8, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 9, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
+    await User.create({ id: 10, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
+    .then((user) => user.setRoles([1]));
 
-    Quiz.create({ id: 1, name: "Heart Fundamentals" }); 
-    Quiz.create({ id: 2, name: "ECG Introduction" }); 
-    Quiz.create({ id: 3, name: "Parts Of The ECG Explained" });
-    Quiz.create({ id: 4, name: "How To Read An ECG" });
-    Quiz.create({ id: 5, name: "How To Document An ECG" });
-    Quiz.create({ id: 6, name: "Conditions" });
+    await Course.create({ id: 1, name: "Heart Fundamentals" }); 
+    await Course.create({ id: 2, name: "ECG Introduction" }); 
+    await Course.create({ id: 3, name: "Parts Of The ECG Explained" });
+    await Course.create({ id: 4, name: "How To Read An ECG" });
+    await Course.create({ id: 5, name: "How To Document An ECG" });
+    await Course.create({ id: 6, name: "Conditions" });
 
-    User.create({ id: 1, username: 'dale', email: 'dale@farm.com', password: 'pass' })
-    .then((user) => user.setRoles([1, 2]));
+    await Quiz.create({ id: 1, name: "Heart Fundamentals" }); 
+    await Quiz.create({ id: 2, name: "ECG Introduction" }); 
+    await Quiz.create({ id: 3, name: "Parts Of The ECG Explained" });
+    await Quiz.create({ id: 4, name: "How To Read An ECG" });
+    await Quiz.create({ id: 5, name: "How To Document An ECG" });
+    await Quiz.create({ id: 6, name: "Conditions" });
 }
