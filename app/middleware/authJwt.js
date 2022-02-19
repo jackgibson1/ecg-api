@@ -3,7 +3,17 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 
-verifyToken = (req, res, next) => { 
+const { TokenExpiredError } = jwt;
+
+// functionality for checking if token expired error 
+// if token isn't valid return unauthorised
+const catchError = (err, res) => { 
+    if (err instanceof TokenExpiredError) { 
+        return res.status(401).send({ message: "Unauthorized! Access Token has expired!" });
+    }
+    return res.sendStatus(401).send({ message: "Unauthorised!" });
+}
+const verifyToken = (req, res, next) => { 
     let token = req.headers["x-access-token"]; 
 
     if(!token) { 
@@ -12,18 +22,16 @@ verifyToken = (req, res, next) => {
         });
     }
 
+    // check if jwt provided is valid
     jwt.verify(token, config.secret, (err, decoded) => {  
-        if (err) { 
-            return res.status(401).send({ 
-                message: "Unauthorised"
-            });
-        }
+        if (err) return catchError(err, res);
         req.userId = decoded.id; 
         next();
     });
 };
 
-isAdmin = (req, res, next) => { 
+// check if user's roles contains ROLE_ADMIN
+const isAdmin = (req, res, next) => { 
     let adminId = req.headers["admin-user-id"]; 
 
     if (!adminId) { 

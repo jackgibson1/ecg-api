@@ -29,6 +29,7 @@ db.sequelize = sequelize;
 /* import all models */
 db.user = require("../models/user.model.js")(sequelize, Sequelize); 
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.refreshToken = require("../models/refresh-token.model")(sequelize, Sequelize);
 db.course = require("../models/course.model.js")(sequelize, Sequelize);
 db.user_progress = require("./user-course-progress.model.js")(sequelize, Sequelize);
 db.user_completed_course = require("./user-course-completed.model.js")(sequelize, Sequelize);
@@ -41,6 +42,10 @@ db.user_quiz_scores = require("./user-quiz-scores.model.js")(sequelize, Sequeliz
 db.role.belongsToMany(db.user, { through: "user_roles", foreignKey: "roleId", otherKey: "userId" });
 db.user.belongsToMany(db.role, { through: "user_roles", foreignKey: "userId", otherKey: "roleId" }); 
 db.ROLES = ["user", "admin"]; 
+
+/* define one to one relationship between user and refrsh token */ 
+db.refreshToken.belongsTo(db.user, { foreignKey: 'userId', targetKey: 'id' });
+db.user.hasOne(db.refreshToken, { foreignKey: 'userId', targetKey: 'id' });
 
 /* define many to many relationship between user and courses to track user progress */
 db.user.belongsToMany(db.course, { through: db.user_progress });

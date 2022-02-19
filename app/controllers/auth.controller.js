@@ -11,6 +11,7 @@ var fetch = require ('node-fetch');
 
 const User = db.user;
 const Role = db.role;
+const RefreshToken = db.refreshToken;
 const User_Progress = db.user_progress;
 const Course = db.course;
 const Quiz = db.quiz;
@@ -85,7 +86,7 @@ exports.signin = (req, res) => {
             username: req.body.username
         }
     })
-        .then(user => {
+        .then(async (user) => {
             if (!user) {
                 return res.status(404).send({ message: "User Not found." });
             }
@@ -103,8 +104,10 @@ exports.signin = (req, res) => {
             }
 
             var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 86400 // 24 hours
+                expiresIn: config.jwtExpiration
             });
+
+            let refreshToken = await RefreshToken.createToken(user);
 
             var authorities = [];
             user.getRoles().then(roles => {
@@ -116,7 +119,8 @@ exports.signin = (req, res) => {
                     username: user.username,
                     email: user.email,
                     roles: authorities,
-                    accessToken: token
+                    accessToken: token, 
+                    refreshToken: refreshToken,
                 });
             });
         })
@@ -124,6 +128,43 @@ exports.signin = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+exports.refreshToken = async (req, res) => {
+    // get Refresh token form request data
+    const { refreshToken: requestToken } = req.body;
+    if (requestToken == null) {
+      return res.status(403).json({ message: "Refresh Token is required!" });
+    }
+    try {
+        // get Refresh token object { id, user, token, expiryDate }
+      let refreshToken = await RefreshToken.findOne({ where: { token: requestToken } });
+      console.log(refreshToken)
+      if (!refreshToken) {
+        res.status(403).json({ message: "Refresh token is not in database!" });
+        return;
+      }
+      // if refresh token has expired remove it from the database and return message
+      if (RefreshToken.verifyExpiration(refreshToken)) {
+        RefreshToken.destroy({ where: { id: refreshToken.id } });
+        
+        res.status(403).json({
+          message: "Refresh token was expired. Please make a new signin request",
+        });
+        return;
+      }
+      const user = await refreshToken.getUser();
+      // use user id field to generate new Access Token using jwt library
+      let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: config.jwtExpiration,
+      });
+      return res.status(200).json({
+        accessToken: newAccessToken,
+        refreshToken: refreshToken.token,
+      });
+    } catch (err) {
+      return res.status(500).send({ message: err });
+    }
+  };
 
 exports.verifyCaptcha = async (req, res) => { 
     // secret key for communication between this server and reCAPTCHA
