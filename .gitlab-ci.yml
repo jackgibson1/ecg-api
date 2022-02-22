@@ -5,8 +5,6 @@ stages:
  - test
 
 test:
-  before_script: 
-    - apk --update add nodejs npm
   script:
     - npm install
     - npm test
