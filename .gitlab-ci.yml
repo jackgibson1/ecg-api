@@ -6,7 +6,7 @@ stages:
 
 test:
   before_script: 
-    - sudo apt-get install npm
+    - apk --update add nodejs npm
   script:
     - npm install
     - npm test
