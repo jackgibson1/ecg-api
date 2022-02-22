@@ -6,7 +6,7 @@ stages:
 
 test:
   before_script: 
-    - apt-get install npm
+    - sudo apt-get install npm
   script:
     - npm install
     - npm test
