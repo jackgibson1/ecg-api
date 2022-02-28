@@ -1,9 +1,9 @@
-const express = require("express"); 
+require('dotenv').config();
 const bodyParser = require("body-parser"); 
 const genUsername = require("unique-username-generator");
 const cors = require("cors"); 
+const express = require("express"); 
 const app = express(); 
-require('dotenv').config();
 
 var corsOptions = { 
     // add in deployment origin
@@ -11,32 +11,30 @@ var corsOptions = {
 }; 
 
 app.use(cors(corsOptions)); 
+// parse requests of content-type - application/json 
+app.use(bodyParser.json());
+//parse requests of content-type - application/x-www-form-urlencoded 
+app.use(bodyParser.urlencoded({ extended: true })); 
 
-// import db 
+// import database and models required for intialisation
 const db = require("./app/models");
 const Role = db.role;
 const Course = db.course;
 const Quiz = db.quiz;
 const User = db.user;
 
-// allow to re-sync db - remove paramters for prod 
-// {force: true}
+// allow to re-sync db - remove paramters for prod {force: true}
 db.sequelize.sync({force: true}).then(() => { 
     console.log("Drop and Resync DB"); 
     initial();
 });
 
-// parse requests of content-type - application/json 
-app.use(bodyParser.json());
-
-//parse requests of content-type - application/x-www-form-urlencoded 
-app.use(bodyParser.urlencoded({ extended: true })); 
-
-// simple first route 
+// home route
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to Jacks ECG API"});
 });
 
+// imports all defined routes
 require('./app/routes/auth.routes')(app); 
 require('./app/routes/user.routes')(app);
 require('./app/routes/course.routes')(app);
@@ -49,6 +47,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 })
 
+// called when API server is first started
 async function initial() { 
     Role.create({ id: 1, name: "user" }); 
     Role.create({ id: 2, name: "admin" });
