@@ -1,8 +1,13 @@
 image: node:latest 
 
-# change
 stages: 
+ - lint
  - test
+
+lint: 
+  script: 
+    - npm install 
+    - npx eslint ./ 
 
 test:
   script:
