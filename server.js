@@ -48,6 +48,10 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 })
 
+// test environement variables are being passed 
+console.log(process.env.NODE_ENV); 
+console.log(process.env.JWT_SECRET)
+
 // called when API server is first started
 async function initial() { 
     Role.create({ id: 1, name: "user" }); 
