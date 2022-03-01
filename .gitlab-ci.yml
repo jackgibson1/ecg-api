@@ -1,5 +1,4 @@
 image: node:latest 
-tags: ecg-runner-server
 
 stages: 
 #  - lint
@@ -8,18 +7,21 @@ stages:
 
 # lint: 
 #   stage: lint
+#   tags: ecg-runner-server
 #   script: 
 #     - npm install 
 #     - npx eslint ./ 
 
 # test:
 #   stage: test
+#   tags: ecg-runner-server
 #   script:
 #     - npm install
 #     - npm test
 
 deploy: 
   stage: deploy 
+  tags: ecg-runner-server
   # before_script:
   # ## Install ssh-agent if not already installed, it is required by Docker.
   # - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
