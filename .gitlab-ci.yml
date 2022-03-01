@@ -3,6 +3,7 @@ image: node:latest
 stages: 
  - lint
  - test
+ - deploy
 
 lint: 
   stage: lint
@@ -15,3 +16,9 @@ test:
   script:
     - npm install
     - npm test
+
+deploy: 
+  stage: deploy 
+  script: 
+    - ssh 40231676@hpdc.eeecs.qub.ac.uk
+    - expect "40231676@hpdc.eeecs.qub.ac.uk's password:"
