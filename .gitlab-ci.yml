@@ -1,4 +1,5 @@
 image: node:latest 
+tags: ecg-runner-server
 
 stages: 
 #  - lint
