@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
-import { jwtRefreshExpiration } from '../config/auth.config';
+/* eslint-disable func-names */
+const { v4: uuidv4 } = require('uuid');
+const config = require('../config/auth.config');
 
-export default (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize) => {
   const RefreshToken = sequelize.define('refreshToken', {
     token: {
       type: Sequelize.STRING
@@ -11,9 +12,9 @@ export default (sequelize, Sequelize) => {
     }
   });
 
-  RefreshToken.createToken = async (user) => {
+  RefreshToken.createToken = async function (user) {
     const expiredAt = new Date();
-    expiredAt.setSeconds(expiredAt.getSeconds() + jwtRefreshExpiration);
+    expiredAt.setSeconds(expiredAt.getSeconds() + config.jwtRefreshExpiration);
     const token = uuidv4();
     const refreshToken = await this.create({
       token,

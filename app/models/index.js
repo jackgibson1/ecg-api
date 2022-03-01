@@ -29,7 +29,7 @@ db.sequelize = sequelize;
 /* import all models */
 db.user = require('./user.model')(sequelize, Sequelize);
 db.role = require('./role.model')(sequelize, Sequelize);
-db.refreshToken = require('./refresh-token.model').default(sequelize, Sequelize);
+db.refreshToken = require('./refresh-token.model')(sequelize, Sequelize);
 db.course = require('./course.model')(sequelize, Sequelize);
 db.user_progress = require('./user-course-progress.model')(sequelize, Sequelize);
 db.user_completed_course = require('./user-course-completed.model')(sequelize, Sequelize);

@@ -9,8 +9,8 @@ const db = require('../models');
 
 const Courses = db.course;
 const CourseRatings = db.course_rating;
-const UserCompletedCourse = db.UserCompletedCourse;
-const UserProgress = db.UserProgress;
+const UserCompletedCourse = db.user_completed_course;
+const UserProgress = db.user_progress;
 const Credit = db.credit;
 
 // Get average user rating of course
