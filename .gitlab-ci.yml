@@ -21,7 +21,8 @@ stages:
 
 deploy: 
   stage: deploy 
-  tags: ecg-runner-server
+  tags: 
+    - ecg-runner-server
   # before_script:
   # ## Install ssh-agent if not already installed, it is required by Docker.
   # - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
