@@ -1,6 +1,5 @@
 require('dotenv').config();
 const bodyParser = require("body-parser"); 
-const genUsername = require("unique-username-generator");
 const cors = require("cors"); 
 const express = require("express"); 
 const app = express(); 
@@ -21,13 +20,15 @@ const db = require("./app/models");
 const Role = db.role;
 const Course = db.course;
 const Quiz = db.quiz;
-const User = db.user;
 
-// allow to re-sync db - remove paramters for prod {force: true}
-db.sequelize.sync({force: true}).then(() => { 
-    console.log("Drop and Resync DB"); 
-    initial();
-});
+if(process.env.NODE_ENV == 'development') {
+    db.sequelize.sync({force: true}).then(() => { 
+        console.log("Drop and Resync DB"); 
+        initial();
+    });
+} else { 
+    db.sequelize.sync({force: false});
+}
 
 // home route
 app.get("/", (req, res) => {
@@ -51,27 +52,6 @@ app.listen(PORT, () => {
 async function initial() { 
     Role.create({ id: 1, name: "user" }); 
     Role.create({ id: 2, name: "admin" });
-
-    await User.create({ id: 1, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 2, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 3, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 4, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 5, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 6, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 7, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 8, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 9, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
-    await User.create({ id: 10, username: genUsername.generateUsername(), email: `${genUsername.generateUsername()}@gmail.com`, password: 'pass' })
-    .then((user) => user.setRoles([1]));
 
     await Course.create({ id: 1, name: "Heart Fundamentals" }); 
     await Course.create({ id: 2, name: "ECG Introduction" }); 
