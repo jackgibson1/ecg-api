@@ -20,5 +20,5 @@ test:
 deploy: 
   stage: deploy 
   script: 
-    - ssh 40231676@hpdc.eeecs.qub.ac.uk
+    - ssh -tt 40231676@hpdc.eeecs.qub.ac.uk
     - expect "40231676@hpdc.eeecs.qub.ac.uk's password:"
