@@ -19,7 +19,8 @@
     "mysql2": "^2.3.2",
     "node-fetch": "^2.6.1",
     "sequelize": "^6.9.0",
-    "unique-username-generator": "^1.0.1"
+    "unique-username-generator": "^1.0.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^8.10.0",
@@ -29,31 +30,31 @@
   "eslintConfig": {
     "extends": "airbnb-base",
     "env": {
-        "es6": true,
-        "browser": true
+      "es6": true,
+      "browser": true
     },
     "rules": {
-        "brace-style": [
-            "error",
-            "stroustrup"
-        ],
-        "comma-dangle": [
-            "error",
-            "never"
-        ],
-        "no-unused-vars": [
-            "warn"
-        ],
-        "no-var": [
-            "off"
-        ],
-        "one-var": [
-            "off"
-        ], 
-        "consistent-return": "off",
-        "prefer-destructuring": "off", 
-        "max-len": "off", 
-        "implicit-arrow-linebreak": "off"
+      "brace-style": [
+        "error",
+        "stroustrup"
+      ],
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "no-unused-vars": [
+        "warn"
+      ],
+      "no-var": [
+        "off"
+      ],
+      "one-var": [
+        "off"
+      ],
+      "consistent-return": "off",
+      "prefer-destructuring": "off",
+      "max-len": "off",
+      "implicit-arrow-linebreak": "off"
     }
-}
+  }
 }
