@@ -1,4 +1,6 @@
 image: node:latest 
+services: 
+  - ecg-runner-server
 
 stages: 
 #  - lint
@@ -19,5 +21,15 @@ stages:
 
 deploy: 
   stage: deploy 
+  before_script:
+  ## Install ssh-agent if not already installed, it is required by Docker.
+  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+  ## Run ssh-agent (inside the build environment)
+  - eval $(ssh-agent -s)
+  ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  ## Create the SSH directory and give it the right permissions
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
   script: 
     - ssh 40231676@hpdc.eeecs.qub.ac.uk
