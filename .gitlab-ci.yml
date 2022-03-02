@@ -49,4 +49,4 @@ deploy:
     # assign correct permissions
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh $SSH_USER@$SERVER_IPADDRESS "git clone $CI_REPOSITORY_URL && rm-rf ecg-authentication"
+    - ssh $SSH_USER@$SERVER_IPADDRESS "git clone $CI_REPOSITORY_URL && rm -rf ecg-authentication"
