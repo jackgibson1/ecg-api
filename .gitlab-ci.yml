@@ -1,41 +1,47 @@
 stages: 
-#  - lint
-#  - test
+ - lint
+ - test
+#  - build
  - deploy
 
-# lint: 
-#   stage: lint
+lint: 
+  stage: lint
+  tags: ecg-runner-server
+  script: 
+    - npm install 
+    - npx eslint ./ 
+
+test:
+  stage: test
+  tags: ecg-runner-server
+  script:
+    - npm install
+    - npm test
+
+# build: 
+#   stage: build 
 #   tags: ecg-runner-server
 #   script: 
-#     - npm install 
-#     - npx eslint ./ 
-
-# test:
-#   stage: test
-#   tags: ecg-runner-server
-#   script:
-#     - npm install
-#     - npm test
+#     - push to registry
 
 deploy: 
   stage: deploy
   tags: 
-   - ecg-runner-server
+    - ecg-runner-server
   before_script:
-   # checks if ssh-agent is already installed and if not, then install it
-   - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
-   # starts ssh-agent
-   - eval $(ssh-agent -s)
-   # adds ssh private key stored in variable SSH_PRIAVTE_KEY to agent store
-   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-   # creates .ssh directory and assign correct permissions
-   - mkdir -p ~/.ssh
-   - chmod 700 ~/.ssh
-   # checks public key on remotes server using IP address stored in SERVER_IPADDRESS variable and add it to known hosts. 
-   # it is protecting from men-in-the-middle attack and is necessary to work, otherwise the job will fail.
-   - ssh-keyscan $SERVER_IPADDRESS >> ~/.ssh/known_hosts
-   # assign correct permissions
-   - chmod 644 ~/.ssh/known_hosts
+    # checks if ssh-agent is already installed and if not, then install it
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+    # starts ssh-agent
+    - eval $(ssh-agent -s)
+    # adds ssh private key stored in variable SSH_PRIAVTE_KEY to agent store
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    # creates .ssh directory and assign correct permissions
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    # checks public key on remotes server using IP address stored in SERVER_IPADDRESS variable and add it to known hosts. 
+    # it is protecting from men-in-the-middle attack and is necessary to work, otherwise the job will fail.
+    - ssh-keyscan $SERVER_IPADDRESS >> ~/.ssh/known_hosts
+    # assign correct permissions
+    - chmod 644 ~/.ssh/known_hosts
   script:
-   - ssh $SSH_USER@$SERVER_IPADDRESS "git clone $CI_REPOSITORY_URL"
-   - pwd
+    - ssh $SSH_USER@$SERVER_IPADDRESS "git clone $CI_REPOSITORY_URL && rm-rf ecg-authentication"
