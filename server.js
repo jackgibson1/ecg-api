@@ -45,7 +45,6 @@ async function initial() {
 
 if (process.env.NODE_ENV === 'development') {
   db.sequelize.sync({ force: true }).then(() => {
-    console.log('Drop and Resync DB');
     initial();
   });
 }
@@ -70,3 +69,5 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+module.exports = app;
