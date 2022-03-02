@@ -1,14 +1,16 @@
 const Sequelize = require('sequelize');
-const config = require('../config/db.config');
+const configdb = require('../config/database.json');
+
+const config = configdb[process.env.NODE_ENV];
 
 /* intialise sequelize and define database connection pool details */
 const sequelize = new Sequelize(
-  config.DB,
-  config.USER,
-  config.PASSWORD,
+  config.database,
+  config.username,
+  config.password,
   {
-    host: config.HOST,
-    port: config.PORT,
+    host: config.host,
+    port: config.port,
     dialect: config.dialect,
     operatorsAliases: false,
 
