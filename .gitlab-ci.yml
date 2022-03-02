@@ -33,3 +33,4 @@ deploy:
    - chmod 644 ~/.ssh/known_hosts
   script:
    - ssh $SSH_USER@$SERVER_IPADDRESS "hostname && echo 'Welcome!!!' > welcome.txt"
+   - pwd
