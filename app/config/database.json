@@ -11,7 +11,8 @@
       "acquire":30000,
       "idle":10000
     },
-    "dialect":"mysql"
+    "dialect":"mysql",
+    "logging": true
   },
   "test": {
     "host":"127.0.0.1",
@@ -25,7 +26,8 @@
       "acquire":30000,
       "idle":10000
     },
-    "dialect":"mysql"
+    "dialect":"mysql", 
+    "logging": false
   },
   "production": {
     "host":"143.117.45.71",
@@ -39,6 +41,7 @@
       "acquire":30000,
       "idle":10000
     },
-    "dialect":"mysql"
+    "dialect":"mysql",
+    "logging": false
   }
 }

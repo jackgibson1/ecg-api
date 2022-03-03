@@ -20,9 +20,9 @@ const UserQuizScores = db.user_quiz_scores;
 const { Op } = db.Sequelize;
 
 exports.signup = (req, res) => {
-  if (!req.body.username || !req.body.email || !req.body.password) {
-    return res.status(400).send({ message: 'Ensure userId and quizId are both set!' });
-  }
+  // if (!req.body.username || !req.body.email || !req.body.password) {
+  //   return res.status(400).send({ message: 'Ensure userId and quizId are both set!' });
+  // }
   // Save User to Database
   User.create({
     username: req.body.username,
