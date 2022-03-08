@@ -106,3 +106,85 @@ describe('Authentication Endpoints - Signup', () => {
     expect(res.body).toEqual({ message: 'Failed! Role does not exist = coolrole' });
   });
 });
+
+describe('Authentication Endpoints - Signin', () => {
+  const testDb = db;
+  const username = 'testuser';
+  const password = 'testuser';
+  const email = 'test@test.com';
+
+  beforeAll(async () => {
+    await testDb.sequelize.sync({ force: true });
+    await initial(db.role, db.course, db.quiz);
+    // intialise db with test user
+    await request(app).post('/api/auth/signup').send({ username, password, email });
+  });
+
+  it('user should be able to signin', async () => {
+    const res = await request(app).post('/api/auth/signin').send({ username, password });
+    expect(res.body.accessToken).toBeDefined();
+    expect(res.body.refreshToken).toBeDefined();
+    expect(res.body.id).toBeDefined();
+    expect(res.body.username).toBeDefined();
+    expect(res.body.email).toBeDefined();
+    expect(res.body.roles.length).toEqual(1);
+  });
+
+  it('user should not able to signin with username that does not exist', async () => {
+    const res = await request(app).post('/api/auth/signin')
+      .send({ username: 'fakeuser', password: 'fakepass' });
+    expect(res.body.message).toEqual('User Not found.');
+  });
+
+  it('user should not able to signin with incorrect password', async () => {
+    const res = await request(app).post('/api/auth/signin')
+      .send({ username, password: 'fakepass' });
+    expect(res.body.message).toEqual('Invalid Password!');
+  });
+});
+
+describe('Authentication Endpoints - Refresh Token', () => {
+  const testDb = db;
+  const username = 'testuser';
+  const password = 'testpass';
+  const email = 'test@test.com';
+  let refreshToken;
+
+  beforeAll(async () => {
+    await testDb.sequelize.sync({ force: true });
+    await initial(db.role, db.course, db.quiz);
+    // intialise db with test user
+    await request(app).post('/api/auth/signup').send({ username, password, email });
+    // intialise refreshToken
+    refreshToken = await request(app).post('/api/auth/signin').send({ username, password }).then((res) => res.body.refreshToken);
+  });
+
+  it('should return message if refresh token is not set', async () => {
+    const res = await request(app).post('/api/auth/refreshtoken').send({ refreshToken: null });
+    expect(res.body.message).toEqual('Refresh Token is required!');
+    expect(res.status).toBe(403);
+  });
+
+  it('should return message if refresh token does not exist in db', async () => {
+    const res = await request(app).post('/api/auth/refreshtoken').send({ refreshToken: 'faketoken' });
+    expect(res.body.message).toEqual('Refresh token is not in database!');
+    expect(res.status).toBe(403);
+  });
+
+  // it('should return message if refresh token is no longer and token removed from db', async () => {
+  //   // set time to future date - so that token thinks its expired
+  //   jest.useFakeTimers().setSystemTime(new Date('2023-01-01').getTime());
+  //   const res = await request(app).post('/api/auth/refreshtoken').send({ refreshToken });
+  //   jest.useRealTimers();
+  //   expect(res.body).toEqual('Refresh token was expired. Please make a new signin request');
+  //   expect(res.status).toBe(403);
+  // });
+
+  it('should return new access token and same refresh token if successful', async () => {
+    const res = await request(app).post('/api/auth/refreshtoken').send({ refreshToken });
+    expect(res.body.accessToken).toBeDefined();
+    // refresh token should not update - should remain the samne as old refresh token
+    expect(res.body.refreshToken).toEqual(refreshToken);
+    expect(res.status).toBe(200);
+  });
+});

@@ -34,7 +34,7 @@
     "port":3306,
     "username":"root",
     "password":"ecg123",
-    "database":"ecg-test",
+    "database":"ecg-db-test",
     "pool":{
       "max":5,
       "min":0,
@@ -42,14 +42,14 @@
       "idle":10000
     },
     "dialect":"mysql", 
-    "logging": false
+    "logging": true
   },
   "production-test": {
     "host":"143.117.45.71",
     "port":10000,
     "username":"root",
     "password":"ecgprod123",
-    "database":"ecg-test",
+    "database":"ecg-db-test",
     "pool":{
       "max":5,
       "min":0,
