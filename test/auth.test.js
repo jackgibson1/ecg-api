@@ -1,4 +1,5 @@
 const request = require('supertest');
+const fetchMock = require('fetch-mock');
 const app = require('../app');
 const db = require('../app/models');
 const initial = require('../initialDatabase');
@@ -187,4 +188,26 @@ describe('Authentication Endpoints - Refresh Token', () => {
     expect(res.body.refreshToken).toEqual(refreshToken);
     expect(res.status).toBe(200);
   });
+});
+
+describe('Authentication Endpoints - Verify Captcha', () => {
+  const testDb = db;
+
+  beforeAll(async () => {
+    await testDb.sequelize.sync({ force: true });
+    await initial(db.role, db.course, db.quiz);
+  });
+
+  it('should respond with message if response token is not set', async () => {
+    const res = await request(app).post('/api/auth/verifycaptcha').send();
+    expect(res.body.message).toEqual('Ensure response key is set.');
+    expect(res.status).toBe(404);
+  });
+
+  // it('should respond with error if invalid response token sent', async () => {
+  //   fetchMock.mock('https://www.google.com/recaptcha/api/siteverify', 200);
+  //   const res = await request(app).post('/api/auth/verifycaptcha').send({ responseToken: 'invalid' });
+  //   expect(res.body.message).toEqual('Ensure response key is set.');
+  //   expect(res.status).toBe(404);
+  // });
 });

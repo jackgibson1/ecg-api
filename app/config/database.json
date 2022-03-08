@@ -42,7 +42,7 @@
       "idle":10000
     },
     "dialect":"mysql", 
-    "logging": true
+    "logging": false
   },
   "production-test": {
     "host":"143.117.45.71",

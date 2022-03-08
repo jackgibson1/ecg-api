@@ -177,7 +177,7 @@ exports.verifyCaptcha = async (req, res) => {
   const { responseToken } = req.body;
 
   if (!responseToken) {
-    return res.status(404).send({ message: 'Ensure secret and response keys are both set.' });
+    return res.status(404).send({ message: 'Ensure response key is set.' });
   }
 
   // Validate is Human
