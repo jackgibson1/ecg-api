@@ -18,7 +18,7 @@ test:
     - ecg-runner-server
   script:
     - npm install
-    - npm test
+    - npm run test-runner
 
 # build: 
 #   stage: build 

@@ -23,15 +23,17 @@ describe('Authentication Endpoints - Signup', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual({ message: 'User was registered successfully' });
 
-    // check created user has been added to roles, courses positions & quiz scores tables
+    // check created user has been added to roles, courses positions, quiz scores & credits tables
     const user = await testDb.user.findOne({ where: { username } }).then((usr) => usr);
     const userRoles = await user.getRoles();
     const totalCoursePositions = await user.getCourses();
     const totalQuizScores = await user.getQuizzes();
+    const userCredit = await user.getCredit();
 
     expect(userRoles.length).toEqual(1);
     expect(totalCoursePositions.length).toEqual(6);
     expect(totalQuizScores.length).toEqual(6);
+    expect(userCredit.credits).toEqual(0);
   });
 
   it('user should be able to signup as admin if all conditions are correct', async () => {

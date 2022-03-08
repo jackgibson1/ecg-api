@@ -14,7 +14,22 @@
     "dialect":"mysql",
     "logging": true
   },
-  "test": {
+  "production": {
+    "host":"143.117.45.71",
+    "port":10000,
+    "username":"root",
+    "password":"ecgprod123",
+    "database":"ecg-db",
+    "pool":{
+      "max":5,
+      "min":0,
+      "acquire":30000,
+      "idle":10000
+    },
+    "dialect":"mysql",
+    "logging": false
+  },
+  "development-test": {
     "host":"127.0.0.1",
     "port":3306,
     "username":"root",
@@ -29,12 +44,12 @@
     "dialect":"mysql", 
     "logging": false
   },
-  "production": {
+  "production-test": {
     "host":"143.117.45.71",
     "port":10000,
     "username":"root",
     "password":"ecgprod123",
-    "database":"ecg-db",
+    "database":"ecg-test",
     "pool":{
       "max":5,
       "min":0,
