@@ -122,7 +122,6 @@ describe('Authentication Endpoints - Signin', () => {
 
   it('user should be able to signin', async () => {
     const res = await request(app).post('/api/auth/signin').send({ username, password });
-    expect(res).toBe('test');
     expect(res.body.accessToken).toBeDefined();
     expect(res.body.refreshToken).toBeDefined();
     expect(res.body.id).toBeDefined();
