@@ -1,5 +1,4 @@
 const request = require('supertest');
-const fetchMock = require('fetch-mock');
 const app = require('../app');
 const db = require('../app/models');
 const initial = require('../initialDatabase');
@@ -204,10 +203,7 @@ describe('Authentication Endpoints - Verify Captcha', () => {
     expect(res.status).toBe(404);
   });
 
-  // it('should respond with error if invalid response token sent', async () => {
-  //   fetchMock.mock('https://www.google.com/recaptcha/api/siteverify', 200);
-  //   const res = await request(app).post('/api/auth/verifycaptcha').send({ responseToken: 'invalid' });
-  //   expect(res.body.message).toEqual('Ensure response key is set.');
-  //   expect(res.status).toBe(404);
-  // });
+  it('should respond with error if invalid response token sent', async () => {
+    // figure out how to mock
+  });
 });
