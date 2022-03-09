@@ -1,7 +1,7 @@
 // model defining courses
 
 module.exports = (sequelize, Sequelize) => {
-  const Quiz = sequelize.define('quizzes', {
+  const quiz = sequelize.define('quizzes', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true
@@ -11,5 +11,5 @@ module.exports = (sequelize, Sequelize) => {
     }
   }, { timestamps: false });
 
-  return Quiz;
+  return quiz;
 };

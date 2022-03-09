@@ -40,6 +40,8 @@ db.credit = require('./credit.model')(sequelize, Sequelize);
 db.course_rating = require('./course-rating.model')(sequelize, Sequelize);
 db.quiz = require('./quiz.model')(sequelize, Sequelize);
 db.user_quiz_scores = require('./user-quiz-scores.model')(sequelize, Sequelize);
+db.post = require('./post.model')(sequelize, Sequelize);
+db.comment = require('./comment.model')(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId' });
@@ -71,4 +73,16 @@ db.course_rating.belongsTo(db.course, { foreignKey: 'courseId', onDelete: 'CASCA
 /* user has many quizzes (and quiz can have many users) */
 db.user.belongsToMany(db.quiz, { through: db.user_quiz_scores });
 db.quiz.belongsToMany(db.user, { through: db.user_quiz_scores });
+
+/* define relationship between post and comment (one to many) */
+db.post.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.comment.belongsTo(db.post, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+
+/* define relationship between user and posts (one to many) */
+db.user.hasMany(db.post, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.post.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+
+/* define relationship between user and commnet (one to many) */
+db.user.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.comment.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 module.exports = db;
