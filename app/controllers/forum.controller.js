@@ -17,7 +17,7 @@ exports.createPost = async (req, res) => {
     return res.status(400).send({ success: false, message: 'Ensure userid, title & description are all set.' });
   }
 
-  Post.create({
+  await Post.create({
     title, description, userId, date: Date.now()
   }).then(() => {
     res.json({ success: true });
@@ -46,9 +46,30 @@ exports.deletePost = async (req, res) => {
   }
 
   // delete post
-  Post.destroy({ where: { id: postId } }).then(() => {
+  await Post.destroy({ where: { id: postId } }).then(() => {
     res.json({ success: true });
   }).catch(() => {
-    res.status(400).send({ success: false, message: 'Unable to delete post.' });
+    res.status(500).send({ success: false, message: 'Unable to delete post.' });
   });
+};
+
+exports.getAllPosts = async (req, res) => {
+  await Post.findAll().then((resp) => {
+    res.json(resp);
+  }).catch(() => {
+    res.status(500).send({ message: 'Something has went wrong.' });
+  });
+};
+
+exports.getPost = async (req, res) => {
+  const postId = req.params.postId;
+
+  if (!postId) {
+    return res.status(400).send({ message: 'Ensure postId has been set.' });
+  }
+
+  await Post.findOne({ where: { id: postId } }).then((row) => {
+    if (row) return res.json(row);
+    return res.status(400).send({ message: 'Provided post does not exist.' });
+  }).catch(() => res.status(500).send({ message: 'Something has went wrong.' }));
 };

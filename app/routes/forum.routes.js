@@ -23,4 +23,16 @@ module.exports = (app) => {
     [authJwt.verifyToken],
     controller.deletePost
   );
+
+  // retrieve all posts (can be accessed by all)
+  app.get(
+    '/api/forum/post/all',
+    controller.getAllPosts
+  );
+
+  // retrieve a single post
+  app.get(
+    '/api/forum/post/:postId',
+    controller.getPost
+  );
 };
