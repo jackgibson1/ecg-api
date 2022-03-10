@@ -34,5 +34,6 @@ require('./app/routes/user.routes')(app);
 require('./app/routes/course.routes')(app);
 require('./app/routes/quiz.routes')(app);
 require('./app/routes/admin.routes')(app);
+require('./app/routes/forum.routes')(app);
 
 module.exports = app;
