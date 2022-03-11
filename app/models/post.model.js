@@ -15,6 +15,10 @@ module.exports = (sequelize, Sequelize) => {
     date: {
       type: Sequelize.DATE,
       allowNull: false
+    },
+    username: {
+      type: Sequelize.STRING,
+      allowNull: false
     }
   }, { timestamps: false });
   return post;

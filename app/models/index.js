@@ -79,10 +79,10 @@ db.post.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'CASCA
 db.comment.belongsTo(db.post, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
 /* define relationship between user and posts (one to many) */
-db.user.hasMany(db.post, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-db.post.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.user.hasMany(db.post, { foreignKey: 'username', sourceKey: 'username' });
+db.post.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
 
 /* define relationship between user and commnet (one to many) */
-db.user.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-db.comment.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.user.hasMany(db.comment, { foreignKey: 'username', sourceKey: 'username' });
+db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
 module.exports = db;
