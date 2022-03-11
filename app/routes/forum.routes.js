@@ -35,4 +35,18 @@ module.exports = (app) => {
     '/api/forum/post/:postId',
     controller.getPost
   );
+
+  // create a comment
+  app.post(
+    '/api/forum/comment/create',
+    [authJwt.verifyToken],
+    controller.createComment
+  );
+
+  // delete comment (only user can delete their own comment)
+  app.delete(
+    '/api/forum/comment/delete/:commentId',
+    [authJwt.verifyToken],
+    controller.deleteComment
+  );
 };

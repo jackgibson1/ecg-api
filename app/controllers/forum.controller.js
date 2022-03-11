@@ -7,6 +7,7 @@
 const db = require('../models');
 
 const Post = db.post;
+const Comment = db.comment;
 
 exports.createPost = async (req, res) => {
   const userId = req.headers['user-id'];
@@ -72,4 +73,46 @@ exports.getPost = async (req, res) => {
     if (row) return res.json(row);
     return res.status(400).send({ message: 'Provided post does not exist.' });
   }).catch(() => res.status(500).send({ message: 'Something has went wrong.' }));
+};
+
+exports.createComment = async (req, res) => {
+  const userId = req.headers['user-id'];
+  const postId = req.body.postId;
+  const description = req.body.description;
+
+  if (!userId || !postId || !description) {
+    return res.status(400).send({ success: false, message: 'Please ensure userId, postId and description are all set.' });
+  }
+
+  Comment.create({
+    description, date: Date.now(), postId, userId
+  }).then(() => res.json({ success: true }))
+    .catch((err) => res.status(400).send({ success: false, message: err.name }));
+};
+
+exports.deleteComment = async (req, res) => {
+  const userId = req.headers['user-id'];
+  const commentId = req.params.commentId;
+
+  if (!userId || !commentId) {
+    return res.status(400).send({ success: false, message: 'Ensure userid & commentId are set.' });
+  }
+
+  // check to see if provided comment was created by user
+  // should only be able to delete a comment if user created it
+  const foundComment = await Comment.findOne({ where: { id: commentId } }).then((row) => {
+    if (row.dataValues.userId !== Number(userId)) return false;
+    return true;
+  }).catch(() => false);
+
+  if (!foundComment) {
+    return res.status(400).send({ success: false, message: 'The provided comment does either not exist or you do not have permission to delete it.' });
+  }
+
+  // delete post
+  await Comment.destroy({ where: { id: commentId } }).then(() => {
+    res.json({ success: true });
+  }).catch(() => {
+    res.status(500).send({ success: false, message: 'Unable to delete comment.' });
+  });
 };
