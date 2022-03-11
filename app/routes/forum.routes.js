@@ -49,4 +49,10 @@ module.exports = (app) => {
     [authJwt.verifyToken],
     controller.deleteComment
   );
+
+  // retrieve all comments for a post (can be accessed by all)
+  app.get(
+    '/api/forum/comment/:postId',
+    controller.getComments
+  );
 };

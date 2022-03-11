@@ -116,3 +116,15 @@ exports.deleteComment = async (req, res) => {
     res.status(500).send({ success: false, message: 'Unable to delete comment.' });
   });
 };
+
+exports.getComments = async (req, res) => {
+  const postId = req.params.postId;
+
+  if (!postId) {
+    return res.status(400).send({ message: 'Please ensure postId is set in request parameters.' });
+  }
+
+  Comment.findAll({ where: { postId } }).then((comments) => res.json(comments)).catch(() => {
+    res.status(500).send({ message: 'Something has went wrong.' });
+  });
+};
