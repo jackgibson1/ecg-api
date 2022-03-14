@@ -4,12 +4,10 @@
 * creating comment, deleting comment, get all comments for a post
 */
 
-const { post } = require('fetch-mock');
 const db = require('../models');
 
 const Post = db.post;
 const Comment = db.comment;
-const User = db.user;
 
 exports.createPost = async (req, res) => {
   const username = req.headers.username;
@@ -56,22 +54,37 @@ exports.deletePost = async (req, res) => {
   });
 };
 
+// used to return each post object with a field of 'totalComments'
+// this is used in the following export - getAllPosts()
+const postsWithTotalComments = async (resp) => {
+  // iterate through posts to get username and total comments for each
+  const postsWithComments = await resp.map(async (pst) => {
+    // get total comments made on each post
+    const totalComments = await pst.getComments().then((commentRows) => commentRows);
+    // object one to merge
+    const objectOne = {
+      id: pst.dataValues.id, title: pst.dataValues.title, description: pst.dataValues.description, date: pst.dataValues.date, username: pst.dataValues.username
+    };
+    // merge object one with result from totalComments & usrname using spread operator
+    return { ...objectOne, ...{ totalComments: totalComments.length } };
+  });
+  return postsWithComments;
+};
+
 exports.getAllPosts = async (req, res) => {
-  await Post.findAll().then(async (resp) => {
-    // iterate through posts to get username and total comments for each
-    const postsWithComments = await resp.map(async (pst) => {
-      // get total comments made on each post
-      const totalComments = await pst.getComments().then((commentRows) => commentRows);
-      // object one to merge
-      const objectOne = {
-        id: pst.dataValues.id, title: pst.dataValues.title, description: pst.dataValues.description, date: pst.dataValues.date, username: pst.dataValues.username
-      };
-      // merge object one with result from totalComments & usrname using spread operator
-      return { ...objectOne, ...{ totalComments: totalComments.length } };
+  const page = req.query.page || 1;
+
+  const numberPerPage = 10;
+  const skip = (page - 1) * numberPerPage;
+
+  await Post.findAndCountAll().then(async (firstRes) => {
+    const numRows = firstRes.count;
+    const numPages = Math.ceil(numRows / numberPerPage);
+
+    await Post.findAll({ limit: numberPerPage, offset: skip }).then(async (secondRes) => {
+      const postsWithComments = await Promise.all(await postsWithTotalComments(secondRes));
+      res.json({ results: postsWithComments, numberOfPages: numPages });
     });
-    // ensure all promises resolve before sending response back
-    const posts = await Promise.all(postsWithComments);
-    res.json(posts);
   }).catch(() => {
     res.status(500).send({ message: 'Something has went wrong.' });
   });
