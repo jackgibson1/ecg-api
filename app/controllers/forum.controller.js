@@ -88,10 +88,10 @@ exports.getAllPosts = async (req, res) => {
       ],
       order
     }).then(async (posts) => {
-      res.json({ results: posts, numberOfPages: numPages });
-    }).catch(() => {
-      res.status(500).send({ message: 'Something has went wrong.' });
+      res.json({ results: posts, numberOfPages: numPages, numberOfResults: numRows });
     });
+  }).catch(() => {
+    res.status(500).send({ message: 'Something has went wrong.' });
   });
 };
 
