@@ -4,6 +4,7 @@
 * creating comment, deleting comment, get all comments for a post
 */
 
+const sequelize = require('sequelize');
 const db = require('../models');
 
 const Post = db.post;
@@ -54,39 +55,43 @@ exports.deletePost = async (req, res) => {
   });
 };
 
-// used to return each post object with a field of 'totalComments'
-// this is used in the following export - getAllPosts()
-const postsWithTotalComments = async (resp) => {
-  // iterate through posts to get username and total comments for each
-  const postsWithComments = await resp.map(async (pst) => {
-    // get total comments made on each post
-    const totalComments = await pst.getComments().then((commentRows) => commentRows);
-    // object one to merge
-    const objectOne = {
-      id: pst.dataValues.id, title: pst.dataValues.title, description: pst.dataValues.description, date: pst.dataValues.date, username: pst.dataValues.username
-    };
-    // merge object one with result from totalComments & usrname using spread operator
-    return { ...objectOne, ...{ totalComments: totalComments.length } };
-  });
-  return postsWithComments;
-};
-
 exports.getAllPosts = async (req, res) => {
   const page = req.query.page || 1;
+  const filter = req.query.filter || '';
+  const order = [];
+
+  if (filter === 'most-comments') {
+    order.push([sequelize.literal('totalComments'), 'DESC']);
+  }
+  else if (filter === 'most-votes') {
+    order.push([sequelize.literal('totalVotes'), 'DESC']);
+  }
+  order.push(['date', 'DESC']);
 
   const numberPerPage = 10;
   const skip = (page - 1) * numberPerPage;
 
-  await Post.findAndCountAll().then(async (firstRes) => {
-    const numRows = firstRes.count;
+  await Post.findAndCountAll().then(async (totalPosts) => {
+    const numRows = totalPosts.count;
     const numPages = Math.ceil(numRows / numberPerPage);
 
-    await Post.findAll({ limit: numberPerPage, offset: skip }).then(async (secondRes) => {
-      const postsWithComments = await Promise.all(await postsWithTotalComments(secondRes));
-      res.json({ results: postsWithComments, numberOfPages: numPages });
+    await Post.findAll({
+      limit: numberPerPage,
+      offset: skip,
+      attributes: [
+        'id',
+        'title',
+        'description',
+        'date',
+        'username',
+        [sequelize.literal('(SELECT COUNT(*) FROM comments WHERE posts.id = comments.postId)'), 'totalComments']
+      ],
+      order
+    }).then(async (posts) => {
+      res.json({ results: posts, numberOfPages: numPages });
+    }).catch(() => {
+      res.status(500).send({ message: 'Something has went wrong.' });
     });
-  }).catch(() => {
-    res.status(500).send({ message: 'Something has went wrong.' });
   });
 };
 
