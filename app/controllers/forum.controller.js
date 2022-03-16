@@ -14,13 +14,20 @@ exports.createPost = async (req, res) => {
   const username = req.headers.username;
   const title = req.body.title;
   const description = req.body.description;
+  const imageFile = req.body.file;
+  let imgsrc;
+  console.log(req.body);
 
   if (!title || !description || !username) {
     return res.status(400).send({ success: false, message: 'Ensure username, title & description are all set.' });
   }
 
+  if (imageFile) {
+    imgsrc = `http://127.0.0.1:8080/images/${req.body.file.filename}`;
+  }
+
   await Post.create({
-    title, description, username, date: Date.now()
+    title, description, username, date: Date.now(), img_src: imgsrc
   }).then(() => {
     res.json({ success: true });
   }).catch(() => {

@@ -19,6 +19,10 @@ module.exports = (sequelize, Sequelize) => {
     username: {
       type: Sequelize.STRING,
       allowNull: false
+    },
+    img_src: {
+      type: Sequelize.STRING,
+      allowNull: true
     }
   }, { timestamps: false });
   return post;

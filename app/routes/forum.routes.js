@@ -1,4 +1,4 @@
-const { authJwt } = require('../middleware');
+const { authJwt, upload } = require('../middleware');
 const controller = require('../controllers/forum.controller');
 
 module.exports = (app) => {
@@ -13,7 +13,10 @@ module.exports = (app) => {
   // create post
   app.post(
     '/api/forum/post/create',
-    [authJwt.verifyToken],
+    [
+      authJwt.verifyToken,
+      upload.single('image')
+    ],
     controller.createPost
   );
 
