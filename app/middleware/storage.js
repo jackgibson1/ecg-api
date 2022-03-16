@@ -1,15 +1,16 @@
 const multer = require('multer');
+const path = require('path');
 
 //! Use of Multer
-const storage = multer.diskStorage({
-  destination: (req, file, callBack) => {
-    callBack(null, '../../public/images/'); // '../public/images/' directory name where save the file
+var storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'public');
   },
-  filename: (req, file, callBack) => {
-    callBack(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  filename(req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage }).single('file');
 
 module.exports = upload;

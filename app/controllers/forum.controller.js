@@ -5,7 +5,9 @@
 */
 
 const sequelize = require('sequelize');
+const multer = require('multer');
 const db = require('../models');
+const { upload } = require('../middleware');
 
 const Post = db.post;
 const Comment = db.comment;
@@ -14,24 +16,29 @@ exports.createPost = async (req, res) => {
   const username = req.headers.username;
   const title = req.body.title;
   const description = req.body.description;
-  const imageFile = req.body.file;
-  let imgsrc;
-  console.log(req.body);
 
   if (!title || !description || !username) {
     return res.status(400).send({ success: false, message: 'Ensure username, title & description are all set.' });
   }
 
-  if (imageFile) {
-    imgsrc = `http://127.0.0.1:8080/images/${req.body.file.filename}`;
-  }
-
   await Post.create({
-    title, description, username, date: Date.now(), img_src: imgsrc
+    title, description, username, date: Date.now()
   }).then(() => {
     res.json({ success: true });
   }).catch(() => {
     res.status(500).send({ success: false, message: 'Something has went wrong.' });
+  });
+};
+
+exports.uploadImage = async (req, res) => {
+  upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    }
+    if (err) {
+      return res.status(500).json(err);
+    }
+    return res.status(200).send(req.file);
   });
 };
 

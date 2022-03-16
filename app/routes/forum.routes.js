@@ -13,11 +13,15 @@ module.exports = (app) => {
   // create post
   app.post(
     '/api/forum/post/create',
-    [
-      authJwt.verifyToken,
-      upload.single('image')
-    ],
+    [authJwt.verifyToken],
     controller.createPost
+  );
+
+  // upload post image
+  app.post(
+    '/api/forum/post/upload',
+    [authJwt.verifyToken],
+    controller.uploadImage
   );
 
   // delete post (only user can delete their own post)

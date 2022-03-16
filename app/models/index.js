@@ -42,6 +42,7 @@ db.quiz = require('./quiz.model')(sequelize, Sequelize);
 db.user_quiz_scores = require('./user-quiz-scores.model')(sequelize, Sequelize);
 db.post = require('./post.model')(sequelize, Sequelize);
 db.comment = require('./comment.model')(sequelize, Sequelize);
+db.post_image_source = require('./post-imagesrc.model')(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId' });
@@ -82,7 +83,12 @@ db.comment.belongsTo(db.post, { foreignKey: { allowNull: false }, onDelete: 'CAS
 db.user.hasMany(db.post, { foreignKey: 'username', sourceKey: 'username' });
 db.post.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
 
-/* define relationship between user and commnet (one to many) */
+/* define relationship between user and comment (one to many) */
 db.user.hasMany(db.comment, { foreignKey: 'username', sourceKey: 'username' });
 db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
+
+/* define relationship between post and image source (one to one) */
+db.post_image_source.belongsTo(db.post, { foreignKey: { unique: true } });
+db.post.hasOne(db.post_image_source, { foreignKey: { unique: true } });
+
 module.exports = db;
