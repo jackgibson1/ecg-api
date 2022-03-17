@@ -20,7 +20,7 @@ module.exports = (app) => {
   // upload post image
   app.post(
     '/api/forum/post/upload',
-    [authJwt.verifyToken],
+    [authJwt.verifyToken, upload.single('file')],
     controller.uploadImage
   );
 

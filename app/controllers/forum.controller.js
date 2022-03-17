@@ -23,22 +23,20 @@ exports.createPost = async (req, res) => {
 
   await Post.create({
     title, description, username, date: Date.now()
-  }).then(() => {
-    res.json({ success: true });
+  }).then((row) => {
+    res.json({ success: true, postId: row.dataValues.id });
   }).catch(() => {
     res.status(500).send({ success: false, message: 'Something has went wrong.' });
   });
 };
 
 exports.uploadImage = async (req, res) => {
-  upload(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json(err);
-    }
-    if (err) {
-      return res.status(500).json(err);
-    }
-    return res.status(200).send(req.file);
+  const postId = req.body.postId;
+  const fileName = req.file.originalname;
+  db.post_image_source.create({ postId, imgsrc: `${postId}-${fileName}` }).then(() => {
+    res.status(200).send('Success');
+  }).catch(() => {
+    res.status(500).send('Something has went wrong.');
   });
 };
 
