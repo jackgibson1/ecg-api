@@ -16,6 +16,8 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+// serve uplaoded images
+app.use(express.static(`${__dirname}/public`));
 
 // import database and models required for intialisation
 const db = require('./app/models');
