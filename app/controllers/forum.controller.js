@@ -5,9 +5,7 @@
 */
 
 const sequelize = require('sequelize');
-const multer = require('multer');
 const db = require('../models');
-const { upload } = require('../middleware');
 
 const Post = db.post;
 const Comment = db.comment;
@@ -38,6 +36,16 @@ exports.uploadImage = async (req, res) => {
   }).catch(() => {
     res.status(500).send('Something has went wrong.');
   });
+};
+
+exports.getImageName = async (req, res) => {
+  const postId = req.params.postId;
+  if (!postId) {
+    return res.status(400).send({ success: false, message: 'Ensure postId is set in parameters.' });
+  }
+
+  db.post_image_source.findOne({ where: { postId } }).then((row) => res.json({ imgName: row.dataValues.imgsrc }))
+    .catch(() => res.status(400).send({ message: 'Post image does not exist' }));
 };
 
 exports.deletePost = async (req, res) => {

@@ -24,6 +24,13 @@ module.exports = (app) => {
     controller.uploadImage
   );
 
+  // get uploaded image name for post
+  app.get(
+    '/api/forum/post/image/:postId',
+    [authJwt.verifyToken],
+    controller.getImageName
+  );
+
   // delete post (only user can delete their own post)
   app.delete(
     '/api/forum/post/delete/:postId',
