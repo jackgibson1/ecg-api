@@ -10,44 +10,44 @@ module.exports = (app) => {
     next();
   });
 
-  // create post
+  // create question
   app.post(
-    '/api/forum/post/create',
+    '/api/forum/question/create',
     [authJwt.verifyToken],
-    controller.createPost
+    controller.createQuestion
   );
 
-  // upload post image
+  // upload question image
   app.post(
-    '/api/forum/post/upload',
+    '/api/forum/question/upload',
     [authJwt.verifyToken, upload.single('file')],
     controller.uploadImage
   );
 
-  // get uploaded image name for post
+  // get uploaded image name for question
   app.get(
-    '/api/forum/post/image/:postId',
+    '/api/forum/question/image/:questionId',
     [authJwt.verifyToken],
     controller.getImageName
   );
 
-  // delete post (only user can delete their own post)
+  // delete question (only user can delete their own question)
   app.delete(
-    '/api/forum/post/delete/:postId',
+    '/api/forum/question/delete/:questionId',
     [authJwt.verifyToken],
-    controller.deletePost
+    controller.deleteQuestion
   );
 
-  // retrieve all posts (can be accessed by all)
+  // retrieve all questions (can be accessed by all)
   app.get(
-    '/api/forum/post/all',
-    controller.getAllPosts
+    '/api/forum/question/all',
+    controller.getAllQuestions
   );
 
-  // retrieve a single post
+  // retrieve a single question
   app.get(
-    '/api/forum/post/:postId',
-    controller.getPost
+    '/api/forum/question/:questionId',
+    controller.getQuestion
   );
 
   // create a comment
@@ -64,9 +64,9 @@ module.exports = (app) => {
     controller.deleteComment
   );
 
-  // retrieve all comments for a post (can be accessed by all)
+  // retrieve all comments for a question (can be accessed by all)
   app.get(
-    '/api/forum/comment/:postId',
+    '/api/forum/comment/:questionId',
     controller.getComments
   );
 };

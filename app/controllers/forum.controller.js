@@ -1,16 +1,16 @@
 /*
 * Controller containing all logic for forum page
-* creating post, deleting post, retrieve all posts, get a single post
-* creating comment, deleting comment, get all comments for a post
+* creating question, deleting question, retrieve all question, get a single question
+* creating comment, deleting comment, get all comments for a question
 */
 
 const sequelize = require('sequelize');
 const db = require('../models');
 
-const Post = db.post;
+const Question = db.question;
 const Comment = db.comment;
 
-exports.createPost = async (req, res) => {
+exports.createQuestion = async (req, res) => {
   const username = req.headers.username;
   const title = req.body.title;
   const description = req.body.description;
@@ -19,19 +19,19 @@ exports.createPost = async (req, res) => {
     return res.status(400).send({ success: false, message: 'Ensure username, title & description are all set.' });
   }
 
-  await Post.create({
+  await Question.create({
     title, description, username, date: Date.now()
   }).then((row) => {
-    res.json({ success: true, postId: row.dataValues.id });
+    res.json({ success: true, questionId: row.dataValues.id });
   }).catch(() => {
     res.status(500).send({ success: false, message: 'Something has went wrong.' });
   });
 };
 
 exports.uploadImage = async (req, res) => {
-  const postId = req.body.postId;
+  const questionId = req.body.questionId;
   const fileName = req.file.originalname;
-  db.post_image_source.create({ postId, imgsrc: `${postId}-${fileName}` }).then(() => {
+  db.question_image_source.create({ questionId, imgsrc: `${questionId}-${fileName}` }).then(() => {
     res.status(200).send('Success');
   }).catch(() => {
     res.status(500).send('Something has went wrong.');
@@ -39,43 +39,43 @@ exports.uploadImage = async (req, res) => {
 };
 
 exports.getImageName = async (req, res) => {
-  const postId = req.params.postId;
-  if (!postId) {
-    return res.status(400).send({ success: false, message: 'Ensure postId is set in parameters.' });
+  const questionId = req.params.questionId;
+  if (!questionId) {
+    return res.status(400).send({ success: false, message: 'Ensure questionId is set in parameters.' });
   }
 
-  db.post_image_source.findOne({ where: { postId } }).then((row) => res.json({ imgName: row.dataValues.imgsrc }))
-    .catch(() => res.status(400).send({ message: 'Post image does not exist' }));
+  db.question_image_source.findOne({ where: { questionId } }).then((row) => res.json({ imgName: row.dataValues.imgsrc }))
+    .catch(() => res.status(400).send({ message: 'Question image does not exist' }));
 };
 
-exports.deletePost = async (req, res) => {
+exports.deleteQuestion = async (req, res) => {
   const username = req.headers.username;
-  const postId = req.params.postId;
+  const questionId = req.params.questionId;
 
-  if (!username || !postId) {
-    return res.status(400).send({ success: false, message: 'Ensure username & postId are set.' });
+  if (!username || !questionId) {
+    return res.status(400).send({ success: false, message: 'Ensure username & questionId are set.' });
   }
 
-  // check to see if provided post was created by user
-  // should only be able to delete a post if user created it
-  const foundPost = await Post.findOne({ where: { id: postId } }).then((row) => {
+  // check to see if provided question was created by user
+  // should only be able to delete a question if user created it (or is admin)
+  const foundQuestion = await Question.findOne({ where: { id: questionId } }).then((row) => {
     if (row.dataValues.username !== username) return false;
     return true;
   }).catch(() => false);
 
-  if (!foundPost) {
-    return res.status(400).send({ success: false, message: 'The provided post does either not exist or you do not have permission to delete it.' });
+  if (!foundQuestion) {
+    return res.status(400).send({ success: false, message: 'The provided question does either not exist or you do not have permission to delete it.' });
   }
 
-  // delete post
-  await Post.destroy({ where: { id: postId } }).then(() => {
+  // delete question
+  await Question.destroy({ where: { id: questionId } }).then(() => {
     res.json({ success: true });
   }).catch(() => {
-    res.status(500).send({ success: false, message: 'Unable to delete post.' });
+    res.status(500).send({ success: false, message: 'Unable to delete question.' });
   });
 };
 
-exports.getAllPosts = async (req, res) => {
+exports.getAllQuestions = async (req, res) => {
   const page = req.query.page || 1;
   const filter = req.query.filter || '';
   const order = [];
@@ -91,11 +91,11 @@ exports.getAllPosts = async (req, res) => {
   const numberPerPage = 10;
   const skip = (page - 1) * numberPerPage;
 
-  await Post.findAndCountAll().then(async (totalPosts) => {
-    const numRows = totalPosts.count;
+  await Question.findAndCountAll().then(async (totalQuestions) => {
+    const numRows = totalQuestions.count;
     const numPages = Math.ceil(numRows / numberPerPage);
 
-    await Post.findAll({
+    await Question.findAll({
       limit: numberPerPage,
       offset: skip,
       attributes: [
@@ -104,41 +104,41 @@ exports.getAllPosts = async (req, res) => {
         'description',
         'date',
         'username',
-        [sequelize.literal('(SELECT COUNT(*) FROM comments WHERE posts.id = comments.postId)'), 'totalComments']
+        [sequelize.literal('(SELECT COUNT(*) FROM comments WHERE questions.id = comments.questionId)'), 'totalComments']
       ],
       order
-    }).then(async (posts) => {
-      res.json({ results: posts, numberOfPages: numPages, numberOfResults: numRows });
+    }).then(async (questions) => {
+      res.json({ results: questions, numberOfPages: numPages, numberOfResults: numRows });
     });
   }).catch(() => {
     res.status(500).send({ message: 'Something has went wrong.' });
   });
 };
 
-exports.getPost = async (req, res) => {
-  const postId = req.params.postId;
+exports.getQuestion = async (req, res) => {
+  const questionId = req.params.questionId;
 
-  if (!postId) {
-    return res.status(400).send({ message: 'Ensure postId has been set.' });
+  if (!questionId) {
+    return res.status(400).send({ message: 'Ensure questionId has been set.' });
   }
 
-  await Post.findOne({ where: { id: postId } }).then((row) => {
+  await Question.findOne({ where: { id: questionId } }).then((row) => {
     if (row) return res.json(row);
-    return res.status(400).send({ message: 'Provided post does not exist.' });
+    return res.status(400).send({ message: 'Provided question does not exist.' });
   }).catch(() => res.status(500).send({ message: 'Something has went wrong.' }));
 };
 
 exports.createComment = async (req, res) => {
   const username = req.headers.username;
-  const postId = req.body.postId;
+  const questionId = req.body.questionId;
   const description = req.body.description;
 
-  if (!username || !postId || !description) {
-    return res.status(400).send({ success: false, message: 'Please ensure username, postId and description are all set.' });
+  if (!username || !questionId || !description) {
+    return res.status(400).send({ success: false, message: 'Please ensure username, questionId and description are all set.' });
   }
 
   Comment.create({
-    description, date: Date.now(), postId, username
+    description, date: Date.now(), questionId, username
   }).then(() => res.json({ success: true }))
     .catch((err) => res.status(400).send({ success: false, message: err.name }));
 };
@@ -162,7 +162,7 @@ exports.deleteComment = async (req, res) => {
     return res.status(400).send({ success: false, message: 'The provided comment does either not exist or you do not have permission to delete it.' });
   }
 
-  // delete post
+  // delete question
   await Comment.destroy({ where: { id: commentId } }).then(() => {
     res.json({ success: true });
   }).catch(() => {
@@ -171,13 +171,13 @@ exports.deleteComment = async (req, res) => {
 };
 
 exports.getComments = async (req, res) => {
-  const postId = req.params.postId;
+  const questionId = req.params.questionId;
 
-  if (!postId) {
-    return res.status(400).send({ message: 'Please ensure postId is set in request parameters.' });
+  if (!questionId) {
+    return res.status(400).send({ message: 'Please ensure questionId is set in request parameters.' });
   }
 
-  Comment.findAll({ where: { postId } }).then((comments) => res.json(comments)).catch(() => {
+  Comment.findAll({ where: { questionId } }).then((comments) => res.json(comments)).catch(() => {
     res.status(500).send({ message: 'Something has went wrong.' });
   });
 };

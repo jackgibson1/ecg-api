@@ -6,7 +6,7 @@ var storage = multer.diskStorage({
     cb(null, 'public/uploads');
   },
   filename(req, file, cb) {
-    cb(null, `${req.body.postId}-${file.originalname}`);
+    cb(null, `${req.body.questionId}-${file.originalname}`);
   }
 });
 

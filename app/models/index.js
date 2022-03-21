@@ -40,9 +40,9 @@ db.credit = require('./credit.model')(sequelize, Sequelize);
 db.course_rating = require('./course-rating.model')(sequelize, Sequelize);
 db.quiz = require('./quiz.model')(sequelize, Sequelize);
 db.user_quiz_scores = require('./user-quiz-scores.model')(sequelize, Sequelize);
-db.post = require('./post.model')(sequelize, Sequelize);
+db.question = require('./question.model')(sequelize, Sequelize);
 db.comment = require('./comment.model')(sequelize, Sequelize);
-db.post_image_source = require('./post-imagesrc.model')(sequelize, Sequelize);
+db.question_image_source = require('./question-imagesrc.model')(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId' });
@@ -75,20 +75,20 @@ db.course_rating.belongsTo(db.course, { foreignKey: 'courseId', onDelete: 'CASCA
 db.user.belongsToMany(db.quiz, { through: db.user_quiz_scores });
 db.quiz.belongsToMany(db.user, { through: db.user_quiz_scores });
 
-/* define relationship between post and comment (one to many) */
-db.post.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-db.comment.belongsTo(db.post, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+/* define relationship between question and comment (one to many) */
+db.question.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.comment.belongsTo(db.question, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
-/* define relationship between user and posts (one to many) */
-db.user.hasMany(db.post, { foreignKey: 'username', sourceKey: 'username' });
-db.post.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
+/* define relationship between user and questions (one to many) */
+db.user.hasMany(db.question, { foreignKey: 'username', sourceKey: 'username' });
+db.question.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
 
 /* define relationship between user and comment (one to many) */
 db.user.hasMany(db.comment, { foreignKey: 'username', sourceKey: 'username' });
 db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
 
-/* define relationship between post and image source (one to one) */
-db.post_image_source.belongsTo(db.post, { foreignKey: { unique: true } });
-db.post.hasOne(db.post_image_source, { foreignKey: { unique: true } });
+/* define relationship between question and image source (one to one) */
+db.question_image_source.belongsTo(db.question, { foreignKey: { unique: true } });
+db.question.hasOne(db.question_image_source, { foreignKey: { unique: true } });
 
 module.exports = db;

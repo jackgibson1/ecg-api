@@ -1,9 +1,9 @@
-// model defining a forum post
-// user can have many posts but each post mush have one user (one-many)
-// post can have many comments but each comment must have one post (one-many)
+// model defining a forum question
+// user can have many question but each question mush have one user (one-many)
+// question can have many comments but each comment must have one question (one-many)
 
 module.exports = (sequelize, Sequelize) => {
-  const post = sequelize.define('posts', {
+  const question = sequelize.define('questions', {
     title: {
       type: Sequelize.TEXT,
       allowNull: false
@@ -21,5 +21,5 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     }
   }, { timestamps: false });
-  return post;
+  return question;
 };
