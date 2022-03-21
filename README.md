@@ -4,7 +4,7 @@ _**ECG Authentication & Services API**_
 - Includes JWT Refresh token implementation using axios interceptors to ensure users can maintain a uninterrupted authenticated session (for 24 hours). 
 - Axios interceptors are used to check JWT expiration.  
 
-_**Overall Architecture** _
+_**Overall Architecture**_
 - Uses Model, View Controller software design pattern to separate internal representations of information from the ways information is presented to and accepted from the user.
 - Also contains middleware which includes middle functions such as authenticating JWT tokens, checking if user is an admin, configuration of server storage for user uploaded images and various other features.  
 - The controller and routes can be divided up into 6 core sections which each represent an area present within the frontend of the application. Admin, authentication, courses, quizzes, users, and forum. 
