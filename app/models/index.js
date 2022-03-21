@@ -88,7 +88,7 @@ db.user.hasMany(db.comment, { foreignKey: 'username', sourceKey: 'username' });
 db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
 
 /* define relationship between question and image source (one to one) */
-db.question_image_source.belongsTo(db.question, { foreignKey: { unique: true } });
-db.question.hasOne(db.question_image_source, { foreignKey: { unique: true } });
+db.question_image_source.belongsTo(db.question, { foreignKey: { allowNull: false } });
+db.question.hasOne(db.question_image_source, { foreignKey: { allowNull: false } });
 
 module.exports = db;

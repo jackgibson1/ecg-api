@@ -32,9 +32,9 @@ exports.uploadImage = async (req, res) => {
   const questionId = req.body.questionId;
   const fileName = req.file.originalname;
   db.question_image_source.create({ questionId, imgsrc: `${questionId}-${fileName}` }).then(() => {
-    res.status(200).send('Success');
+    res.status(200).send({ success: true });
   }).catch(() => {
-    res.status(500).send('Something has went wrong.');
+    res.status(500).send({ success: false });
   });
 };
 
