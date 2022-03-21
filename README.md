@@ -12,3 +12,4 @@ _**Overall Architecture**_
 _**CI/CD**_
 - Contains a .env file (not present in this repository) to contain environment variables which are injected during runtime. Most important variable being the NODE_ENV which I have configured to either be test or production. 
 - Dockerfile is used to build a container which is used for deployment to production (server provided by Charles Gillan). 
+- Deployment pipeline configured in gitlab-ci.yml file. Pipeline contains 3 main jobs; lint code, test code and deployment (deployment is configured using SSH within Gitlab runner to automate deployment to server on each commit to master branch).
