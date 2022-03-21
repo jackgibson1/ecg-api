@@ -1,2 +1,14 @@
-- Node.js & Express authentication API.
+_**ECG Authentication & Services API**_
+- Written in Javascript using Node.js with the Express framework. 
 - Authentication implemented using Java Web Token stored in LocalStorage (client-side). 
+- Includes JWT Refresh token implementation using axios interceptors to ensure users can maintain a uninterrupted authenticated session (for 24 hours). 
+- Axios interceptors are used to check JWT expiration.  
+
+**Overall Architecture** 
+- Uses Model, View Controller software design pattern to separate internal representations of information from the ways information is presented to and accepted from the user.
+- Also contains middleware which includes middle functions such as authenticating JWT tokens, checking if user is an admin, configuration of server storage for user uploaded images and various other features.  
+- The controller and routes can be divided up into 6 core sections which each represent an area present within the frontend of the application. Admin, authentication, courses, quizzes, users, and forum. 
+
+**CI/CD**
+- Contains a .env file (not present in this repository) to contain environment variables which are injected during runtime. Most important variable being the NODE_ENV which I have configured to either be test or production. 
+- Dockerfile is used to build a container which is used for deployment to production (server provided by Charles Gillan). 
