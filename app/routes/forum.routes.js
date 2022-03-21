@@ -27,7 +27,6 @@ module.exports = (app) => {
   // get uploaded image name for question
   app.get(
     '/api/forum/question/image/:questionId',
-    [authJwt.verifyToken],
     controller.getImageName
   );
 
