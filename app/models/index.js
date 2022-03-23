@@ -43,6 +43,8 @@ db.user_quiz_scores = require('./user-quiz-scores.model')(sequelize, Sequelize);
 db.question = require('./question.model')(sequelize, Sequelize);
 db.comment = require('./comment.model')(sequelize, Sequelize);
 db.question_image_source = require('./question-imagesrc.model')(sequelize, Sequelize);
+db.question_upvotes = require('./question-upvotes.model')(sequelize, Sequelize);
+db.question_downvotes = require('./question-downvotes.model')(sequelize, Sequelize);
 
 /* define many to many relationship between users and roles to track users assigned roles */
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId' });
@@ -90,5 +92,10 @@ db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' })
 /* define relationship between question and image source (one to one) */
 db.question_image_source.belongsTo(db.question, { foreignKey: { allowNull: false } });
 db.question.hasOne(db.question_image_source, { foreignKey: { allowNull: false } });
+
+/* define relationship between question and votes (one to many) */
+db.question.hasMany(db.question_upvotes, { foreignKey: 'questionId', onDelete: 'CASCADE' });
+db.question.hasMany(db.question_downvotes, { foreignKey: 'questionId', onDelete: 'CASCADE' });
+// foreign keys defined within models
 
 module.exports = db;
