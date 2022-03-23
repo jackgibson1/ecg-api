@@ -222,7 +222,7 @@ exports.getHasUserVoted = async (req, res) => {
 // cast a vote (check if user has previously voted is done client side)
 exports.castVote = async (req, res) => {
   const questionId = req.params.questionId;
-  const username = req.body.username;
+  const username = req.headers.username;
   const vote = req.body.voteType;
 
   if (!username || !questionId || !vote) {
@@ -239,4 +239,4 @@ exports.castVote = async (req, res) => {
       res.json({ success: true });
     }).catch(() => res.json({ success: false }));
   }
-}
+};
