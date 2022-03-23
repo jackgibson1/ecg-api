@@ -9,6 +9,8 @@ const db = require('../models');
 
 const Question = db.question;
 const Comment = db.comment;
+const QuestionUpvotes = db.question_upvotes;
+const QuestionDownvotes = db.question_downvotes;
 
 exports.createQuestion = async (req, res) => {
   const username = req.headers.username;
@@ -183,11 +185,58 @@ exports.getComments = async (req, res) => {
   });
 };
 
-// exports.getVotes = async (req, res) => {
-//   const questionId = req.params.questionId;
+exports.getHasUserVoted = async (req, res) => {
+  const username = req.headers.username;
+  const questionId = req.params.questionId;
 
-//   if (!questionId) {
-//     return res.status(400).send({ message: 'Please ensure questionId is set in request parameters.' });
-//   }
+  if (!username || !questionId) {
+    return res.status(400).send({ success: false, message: 'Ensure username & questionId are set.' });
+  }
 
-// }
+  // check if user has downvoted question
+  const qDownvotes = await QuestionDownvotes.findOne({ where: { username, questionId } })
+    .then((downvote) => downvote)
+    .catch(() => 'err');
+
+  // check for error first, if downvote is found return votetype as downvote
+  if (qDownvotes === 'err') return res.status(500).send({ message: 'Something has went wrong.' });
+  if (qDownvotes !== null) {
+    return res.json({ voted: true, voteType: 'downvote' });
+  }
+
+  // check if user has upvoted question
+  const qUpvotes = await QuestionUpvotes.findOne({ where: { username, questionId } })
+    .then((upvote) => upvote)
+    .catch(() => 'err');
+
+  // check for error first, if upvote is found return votetype as upvote
+  if (qUpvotes === 'err') return res.status(500).send({ message: 'Something has went wrong.' });
+  if (qUpvotes !== null) {
+    return res.json({ voted: true, voteType: 'upvote' });
+  }
+
+  // if all checks pass user has not voted on this question yet
+  return res.json({ voted: false });
+};
+
+// cast a vote (check if user has previously voted is done client side)
+exports.castVote = async (req, res) => {
+  const questionId = req.params.questionId;
+  const username = req.body.username;
+  const vote = req.body.voteType;
+
+  if (!username || !questionId || !vote) {
+    return res.status(400).send({ success: false, message: 'Ensure username, questionId and vote type are all set.' });
+  }
+
+  if (vote === 'upvote') {
+    QuestionUpvotes.create({ username, questionId }).then(() => {
+      res.json({ success: true });
+    }).catch(() => res.json({ success: false }));
+  }
+  if (vote === 'downvote') {
+    QuestionDownvotes.create({ username, questionId }).then(() => {
+      res.json({ success: true });
+    }).catch(() => res.json({ success: false }));
+  }
+}

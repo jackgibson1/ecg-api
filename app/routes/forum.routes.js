@@ -68,4 +68,18 @@ module.exports = (app) => {
     '/api/forum/comment/:questionId',
     controller.getComments
   );
+
+  // check to see if a user has voted on the provided question
+  app.get(
+    '/api/forum/question/has-user-voted/:questionId',
+    [authJwt.verifyToken],
+    controller.getHasUserVoted
+  );
+
+  // cast vote for provided question
+  app.post(
+    '/api/forum/question/castvote/:questionId',
+    [authJwt.verifyToken],
+    controller.castVote
+  );
 };
