@@ -83,7 +83,7 @@ exports.getAllQuestions = async (req, res) => {
   if (filter === 'most-comments') {
     order.push([sequelize.literal('totalComments'), 'DESC']);
   }
-  else if (filter === 'most-votes') {
+  else if (filter === 'highest-votes') {
     order.push([sequelize.literal('totalVotes'), 'DESC']);
   }
   order.push(['date', 'DESC']);
@@ -104,7 +104,8 @@ exports.getAllQuestions = async (req, res) => {
         'description',
         'date',
         'username',
-        [sequelize.literal('(SELECT COUNT(*) FROM comments WHERE questions.id = comments.questionId)'), 'totalComments']
+        [sequelize.literal('(SELECT COUNT(*) FROM comments WHERE questions.id = comments.questionId)'), 'totalComments'],
+        [sequelize.literal('((SELECT COUNT(*) FROM question_upvotes WHERE questions.id = question_upvotes.questionId) - (SELECT COUNT(*) FROM question_downvotes WHERE questions.id = question_downvotes.questionId))'), 'totalVotes']
       ],
       order
     }).then(async (questions) => {
@@ -181,3 +182,12 @@ exports.getComments = async (req, res) => {
     res.status(500).send({ message: 'Something has went wrong.' });
   });
 };
+
+// exports.getVotes = async (req, res) => {
+//   const questionId = req.params.questionId;
+
+//   if (!questionId) {
+//     return res.status(400).send({ message: 'Please ensure questionId is set in request parameters.' });
+//   }
+
+// }
