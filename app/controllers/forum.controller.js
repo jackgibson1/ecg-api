@@ -185,6 +185,17 @@ exports.getComments = async (req, res) => {
   });
 };
 
+exports.getVotes = async (req, res) => {
+  const questionId = req.params.questionId;
+
+  if (!questionId) {
+    return res.status(400).send({ message: 'Please ensure questionId is set in request parameters.' });
+  }
+
+  const result = await db.sequelize.query(`SELECT (SELECT COUNT(*) FROM question_upvotes WHERE question_upvotes.questionId = ${questionId}) - (SELECT COUNT(*) FROM question_downvotes WHERE question_downvotes.questionId = ${questionId}) AS totalVotes`);
+  res.json({ totalVotes: result[0][0].totalVotes });
+};
+
 exports.getHasUserVoted = async (req, res) => {
   const username = req.headers.username;
   const questionId = req.params.questionId;

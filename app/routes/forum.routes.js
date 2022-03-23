@@ -82,4 +82,10 @@ module.exports = (app) => {
     [authJwt.verifyToken],
     controller.castVote
   );
+
+  // get all votes for a provided question
+  app.get(
+    '/api/forum/question/allvotes/:questionId',
+    controller.getVotes
+  );
 };
