@@ -171,15 +171,6 @@ describe('Authentication Endpoints - Refresh Token', () => {
     expect(res.status).toBe(403);
   });
 
-  // it('should return message if refresh token is no longer and token removed from db', async () => {
-  //   // set time to future date - so that token thinks its expired
-  //   jest.useFakeTimers().setSystemTime(new Date('2023-01-01').getTime());
-  //   const res = await request(app).post('/api/auth/refreshtoken').send({ refreshToken });
-  //   jest.useRealTimers();
-  //   expect(res.body).toEqual('Refresh token was expired. Please make a new signin request');
-  //   expect(res.status).toBe(403);
-  // });
-
   it('should return new access token and same refresh token if successful', async () => {
     const res = await request(app).post('/api/auth/refreshtoken').send({ refreshToken });
     expect(res.body.accessToken).toBeDefined();
@@ -201,9 +192,5 @@ describe('Authentication Endpoints - Verify Captcha', () => {
     const res = await request(app).post('/api/auth/verifycaptcha').send();
     expect(res.body.message).toEqual('Ensure response key is set.');
     expect(res.status).toBe(404);
-  });
-
-  it('should respond with error if invalid response token sent', async () => {
-    // figure out how to mock
   });
 });
