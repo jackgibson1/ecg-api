@@ -1,7 +1,7 @@
 _**ECG Authentication & Services API**_
 - Written in Javascript using Node.js with the Express framework. 
 - Authentication implemented using Java Web Token stored in LocalStorage (client-side). 
-- Includes JWT Refresh token implementation using axios interceptors to ensure users can maintain a uninterrupted authenticated session (for 24 hours). 
+- Includes JWT Refresh token implementation which is facilitated using axios interceptors on the client side to ensure users can maintain a uninterrupted authenticated session (for 24 hours). 
 - Axios interceptors are used to check JWT expiration.  
 
 _**Overall Architecture**_
