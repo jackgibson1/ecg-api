@@ -61,6 +61,7 @@ exports.deleteQuestion = async (req, res) => {
   // check to see if provided question was created by user
   // should only be able to delete a question if user created it (or is admin)
   const foundQuestion = await Question.findOne({ where: { id: questionId } }).then((row) => {
+    if (username === 'admin') return true;
     if (row.dataValues.username !== username) return false;
     return true;
   }).catch(() => false);
@@ -72,8 +73,9 @@ exports.deleteQuestion = async (req, res) => {
   // delete question
   await Question.destroy({ where: { id: questionId } }).then(() => {
     res.json({ success: true });
-  }).catch(() => {
+  }).catch((err) => {
     res.status(500).send({ success: false, message: 'Unable to delete question.' });
+    console.log(err);
   });
 };
 
