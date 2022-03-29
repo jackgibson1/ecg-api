@@ -47,7 +47,7 @@ deploy:
        && git clone $CI_REPOSITORY_URL 
        && echo $SERVER_PASSWORD | sudo -S docker stop ecg-api 
        && echo $SERVER_PASSWORD | sudo -S docker rm ecg-api 
-       && echo $SERVER_PASSWORD | sudo -S rmi ecg-api-image 
+       && echo $SERVER_PASSWORD | sudo -S docker rmi ecg-api-image 
        && cd ecg-authentication 
        && echo $SERVER_PASSWORD | sudo -S docker build -t ecg-api-image .
        && echo $SERVER_PASSWORD | sudo -S docker run -d --name=ecg-api -p 10002:8080 -e NODE_ENV=production -e JWT_SECRET=$JWT_SECRET ecg-api-image
