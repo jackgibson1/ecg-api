@@ -22,9 +22,11 @@ test:
 
 confirm-deploy: 
   stage: confirm-deploy
+  tags: 
+    - ecg-runner-server
   when: manual
-  script: 
-   - echo "Are you sure you want to deploy to production?"
+  allow_failure: false
+  script: exit 0 
 
 deploy: 
   stage: deploy
