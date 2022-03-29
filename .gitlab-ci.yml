@@ -1,23 +1,30 @@
 stages: 
-#  - lint
-#  - test
+ - lint
+ - test
+ - confirm-deploy
  - deploy
 
-# lint: 
-#   stage: lint
-#   tags: 
-#     - ecg-runner-server
-#   script: 
-#     - npm install 
-#     - npx eslint ./ 
+lint: 
+  stage: lint
+  tags: 
+    - ecg-runner-server
+  script: 
+    - npm install 
+    - npx eslint ./ 
 
-# test:
-#   stage: test
-#   tags: 
-#     - ecg-runner-server
-#   script:
-#     - npm install
-#     - npm run test-runner
+test:
+  stage: test
+  tags: 
+    - ecg-runner-server
+  script:
+    - npm install
+    - npm run test-runner
+
+confirm-deploy: 
+  stage: confirm-deploy
+  when: manual
+  script: 
+   - echo "Are you sure you want to deploy to production?"
 
 deploy: 
   stage: deploy
