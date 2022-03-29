@@ -28,6 +28,7 @@ confirm-deploy:
 
 deploy: 
   stage: deploy
+  needs: ['confirm-deploy']
   tags: 
     - ecg-runner-server
   only: 
