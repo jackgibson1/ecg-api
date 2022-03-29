@@ -43,7 +43,8 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - ssh $SSH_USER@$SERVER_IPADDRESS 
-       "git clone $CI_REPOSITORY_URL 
+       "rm -rf ecg-authentication 
+       && git clone $CI_REPOSITORY_URL 
        && echo $SERVER_PASSWORD | sudo -S docker stop ecg-api 
        && echo $SERVER_PASSWORD | sudo -S docker rm ecg-api 
        && echo $SERVER_PASSWORD | sudo -S rmi ecg-api-image 
