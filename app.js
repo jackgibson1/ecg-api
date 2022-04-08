@@ -8,7 +8,7 @@ const app = express();
 
 const corsOptions = {
   // add in deployment origin
-  origin: 'http://localhost:8081'
+  origin: ['http://localhost:8081', 'http://143.117.45.71:10003']
 };
 
 app.use(cors(corsOptions));
