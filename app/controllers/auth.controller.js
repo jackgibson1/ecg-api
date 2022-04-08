@@ -172,7 +172,7 @@ exports.refreshToken = async (req, res) => {
 
 exports.verifyCaptcha = async (req, res) => {
   // secret key for communication between this server and reCAPTCHA
-  const secretKey = '6Ld6P00eAAAAAKMB6zYlO1kchNw1X_ROUuefv4tW';
+  const secretKey = '6LfyglofAAAAAGFzgrKeMA0PLglCvss1m2tD8XU6';
   // response token generated from react app
   const { responseToken } = req.body;
 
