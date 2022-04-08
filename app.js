@@ -26,7 +26,10 @@ if (process.env.NODE_ENV === 'development') {
   db.sequelize.sync({ force: true }).then(() => initial(db.role, db.course, db.quiz));
 }
 else if (process.env.NODE_ENV === 'production') {
-  db.sequelize.sync({ force: false });
+  // ideally force should be false to ensure data is not dropped in production
+  // however as product is still in develpment users will not expect data to kept
+  // main priority is that users can test product with updated features
+  db.sequelize.sync({ force: true }).then(() => initial(db.role, db.course, db.quiz));
 }
 
 // API ROUTES
