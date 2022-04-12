@@ -82,16 +82,16 @@ db.question.hasMany(db.comment, { foreignKey: { allowNull: false }, onDelete: 'C
 db.comment.belongsTo(db.question, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
 /* define relationship between user and questions (one to many) */
-db.user.hasMany(db.question, { foreignKey: 'username', sourceKey: 'username' });
-db.question.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
+db.user.hasMany(db.question, { foreignKey: 'username', sourceKey: 'username', onDelete: 'CASCADE' });
+db.question.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username', onDelete: 'CASCADE' });
 
 /* define relationship between user and comment (one to many) */
-db.user.hasMany(db.comment, { foreignKey: 'username', sourceKey: 'username' });
-db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username' });
+db.user.hasMany(db.comment, { foreignKey: 'username', sourceKey: 'username', onDelete: 'CASCADE' });
+db.comment.belongsTo(db.user, { foreignKey: 'username', sourceKey: 'username', onDelete: 'CASCADE' });
 
 /* define relationship between question and image source (one to one) */
-db.question_image_source.belongsTo(db.question, { foreignKey: { allowNull: false } });
-db.question.hasOne(db.question_image_source, { foreignKey: { allowNull: false } });
+db.question_image_source.belongsTo(db.question, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+db.question.hasOne(db.question_image_source, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
 /* define relationship between question and votes (one to many) */
 db.question.hasMany(db.question_upvotes, { foreignKey: 'questionId', onDelete: 'CASCADE' });
