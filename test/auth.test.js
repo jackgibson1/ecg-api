@@ -66,7 +66,7 @@ describe('Authentication Endpoints - Signup', () => {
         email: ''
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toEqual({ message: 'Ensure userId and quizId are both set!' });
+    expect(res.body).toEqual({ message: 'Ensure username, email and password are all set!' });
   });
 
   it('user should not be able to up with duplicate username', async () => {
