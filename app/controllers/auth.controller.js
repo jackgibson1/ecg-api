@@ -21,7 +21,7 @@ const { Op } = db.Sequelize;
 
 exports.signup = (req, res) => {
   if (!req.body.username || !req.body.email || !req.body.password) {
-    return res.status(400).send({ message: 'Ensure userId and quizId are both set!' });
+    return res.status(400).send({ message: 'Ensure username, emial and password are all set!' });
   }
   // Save User to Database
   User.create({
