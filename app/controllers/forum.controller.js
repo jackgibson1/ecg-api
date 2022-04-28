@@ -84,15 +84,15 @@ exports.getAllQuestions = async (req, res) => {
   const filter = req.query.filter || '';
   const order = [];
 
-  if (filter === 'most-comments') {
-    order.push([sequelize.literal('totalComments'), 'DESC']);
-  }
-  else if (filter === 'highest-votes') {
-    order.push([sequelize.literal('totalVotes'), 'DESC']);
-  }
+  // apply filter if defined
+  if (filter === 'most-comments') order.push([sequelize.literal('totalComments'), 'DESC']);
+  else if (filter === 'highest-votes') order.push([sequelize.literal('totalVotes'), 'DESC']);
+  // default filter is most recent which is always applied
   order.push(['date', 'DESC']);
 
+  // number of questions in response
   const numberPerPage = 10;
+  // caluclate the offset for the questions list to begin from
   const skip = (page - 1) * numberPerPage;
 
   await Question.findAndCountAll().then(async (totalQuestions) => {
